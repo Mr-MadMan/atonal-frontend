@@ -6,6 +6,7 @@ dist-ssr
 .vscode
 .history
 README.html
+.github
 
 .stylelintcache
 .idea

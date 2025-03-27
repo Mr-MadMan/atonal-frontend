@@ -3,7 +3,7 @@ declare type ClassName = { [className: string]: any } | ClassName[] | string;
 
 declare interface ImportMeta {
   env: {
-    MODE: 'mock' | 'development' | 'test' | 'release' | 'site';
+    MODE: 'mock' | 'dev' | 'prod';
   };
 }
 

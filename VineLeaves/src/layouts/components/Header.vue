@@ -9,28 +9,18 @@
           <t-button theme="default" shape="square" variant="text" @click="changeCollapsed">
             <view-list-icon class="collapsed-icon" />
           </t-button>
-          <search :layout="layout" />
+          <!-- <search :layout="layout" /> -->
         </div>
       </template>
       <menu-content v-show="layout !== 'side'" class="header-menu" :navData="menu" />
       <template #operations>
         <div class="operations-container">
           <!-- 搜索框 -->
-          <search v-if="layout !== 'side'" :layout="layout" />
+          <!-- <search v-if="layout !== 'side'" :layout="layout" /> -->
 
           <!-- 全局通知 -->
-          <notice />
+          <!-- <notice /> -->
 
-          <t-tooltip placement="bottom" content="代码仓库">
-            <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
-              <logo-github-icon />
-            </t-button>
-          </t-tooltip>
-          <t-tooltip placement="bottom" content="帮助文档">
-            <t-button theme="default" shape="square" variant="text" @click="navToHelper">
-              <help-circle-icon />
-            </t-button>
-          </t-tooltip>
           <t-dropdown :min-column-width="125" trigger="click">
             <template #dropdown>
               <t-dropdown-menu>
@@ -46,17 +36,17 @@
               <template #icon>
                 <user-circle-icon class="header-user-avatar" />
               </template>
-              <div class="header-user-account">Tencent</div>
+              <div class="header-user-account">{{ userInfo.nickname }}</div>
               <template #suffix>
                 <chevron-down-icon />
               </template>
             </t-button>
           </t-dropdown>
-          <t-tooltip placement="bottom" content="系统设置">
+          <!-- <t-tooltip placement="bottom" content="系统设置">
             <t-button theme="default" shape="square" variant="text" @click="toggleSettingPanel">
               <setting-icon />
             </t-button>
-          </t-tooltip>
+          </t-tooltip> -->
         </div>
       </template>
     </t-head-menu>
@@ -65,34 +55,23 @@
 
 <script>
 import Vue from 'vue';
-import {
-  ViewListIcon,
-  LogoGithubIcon,
-  HelpCircleIcon,
-  UserCircleIcon,
-  PoweroffIcon,
-  SettingIcon,
-  ChevronDownIcon,
-} from 'tdesign-icons-vue';
+import { ViewListIcon, UserCircleIcon, PoweroffIcon, ChevronDownIcon } from 'tdesign-icons-vue';
 import { prefix } from '@/config/global';
 import LogoFull from '@/assets/assets-logo-full.svg';
-
-import Notice from './Notice.vue';
-import Search from './Search.vue';
+// import Notice from './Notice.vue';
+// import Search from './Search.vue';
 import MenuContent from './MenuContent.vue';
+import { mapState } from 'vuex';
 
 export default Vue.extend({
   components: {
     MenuContent,
     LogoFull,
-    Notice,
-    Search,
+    // Notice,
+    // Search,
     ViewListIcon,
-    LogoGithubIcon,
-    HelpCircleIcon,
     UserCircleIcon,
     PoweroffIcon,
-    SettingIcon,
     ChevronDownIcon,
   },
   props: {
@@ -129,6 +108,7 @@ export default Vue.extend({
     };
   },
   computed: {
+    ...mapState('user', ['userInfo']),
     active() {
       if (!this.$route.path) {
         return '';

@@ -15,7 +15,6 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import SideNav from './SideNav.vue';
-
 import { SettingType } from '@/interface';
 
 export default Vue.extend({

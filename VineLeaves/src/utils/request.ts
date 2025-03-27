@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { message } from 'tdesign-vue';
 import proxy from '../config/host';
 
-const env = import.meta.env.MODE || 'development';
+const env = import.meta.env.MODE || 'dev';
 
 console.log('env', env);
 
@@ -15,7 +16,7 @@ const CODE = {
 
 const instance = axios.create({
   baseURL: API_HOST,
-  timeout: 1000,
+  timeout: 10000,
   withCredentials: true,
 });
 
@@ -33,7 +34,8 @@ instance.interceptors.response.use(
       if (data.code === CODE.REQUEST_SUCCESS) {
         return data;
       }
-      return response;
+      message.error(data?.msg || '请求失败');
+      return Promise.reject(data);
     }
   },
   (err) => {
@@ -44,6 +46,7 @@ instance.interceptors.response.use(
     config.retryCount = config.retryCount || 0;
 
     if (config.retryCount >= config.retry) {
+      message.error('请求超时，请稍后重试');
       return Promise.reject(err);
     }
 

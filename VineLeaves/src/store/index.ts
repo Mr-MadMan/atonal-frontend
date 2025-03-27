@@ -9,7 +9,7 @@ import tabRouter from './modules/tab-router'; // 多标签管理
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  strict: import.meta.env.MODE === 'release',
+  strict: import.meta.env.MODE === 'prod',
   modules: {
     user,
     setting,

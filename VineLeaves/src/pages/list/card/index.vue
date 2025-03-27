@@ -143,27 +143,29 @@ export default {
     },
   },
   mounted() {
-    this.dataLoading = true;
-    this.$request
-      .get('/api/get-card-list')
-      .then((res) => {
-        if (res.code === 0) {
-          const { list = [] } = res.data;
-          this.productList = list;
-          this.pagination = {
-            ...this.pagination,
-            total: list.length,
-          };
-        }
-      })
-      .catch((e: Error) => {
-        console.log(e);
-      })
-      .finally(() => {
-        this.dataLoading = false;
-      });
+    // this.dataLoading = true;
   },
   methods: {
+    getList() {
+      this.$request
+        .get('/api/get-card-list')
+        .then((res) => {
+          if (res.code === 0) {
+            const { list = [] } = res.data;
+            this.productList = list;
+            this.pagination = {
+              ...this.pagination,
+              total: list.length,
+            };
+          }
+        })
+        .catch((e: Error) => {
+          console.log(e);
+        })
+        .finally(() => {
+          this.dataLoading = false;
+        });
+    },
     onPageSizeChange(size: number): void {
       this.pagination.pageSize = size;
       this.pagination.current = 1;

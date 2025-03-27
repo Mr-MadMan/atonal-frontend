@@ -41,6 +41,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
+    console.log('no token');
     /* white list router */
     if (whiteListRouters.indexOf(to.path) !== -1) {
       next();

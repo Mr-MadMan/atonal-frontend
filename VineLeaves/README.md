@@ -1,13 +1,3 @@
-### Features
-
-- Various provided pages for develop
-- Complete directory structure for develop
-- Code specification configuration
-- Support dark mode
-- Custom theme colors
-- Various space layouts
-- Mock data scheme
-
 ### Usage
 
 > Initialize project with our CLI tool `tdesign-starter-cli`
