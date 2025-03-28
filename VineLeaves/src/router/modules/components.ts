@@ -19,7 +19,7 @@ export default [
         path: 'card',
         name: 'ListCard',
         component: () => import('@/pages/list/card/index.vue'),
-        meta: { title: '卡片列表页' },
+        meta: { title: '用户列表' },
       },
       // {
       //   path: 'filter',

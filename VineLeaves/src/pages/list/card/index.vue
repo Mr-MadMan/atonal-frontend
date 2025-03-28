@@ -17,7 +17,7 @@
             :lg="4"
             :xs="6"
             :xl="3"
-            v-for="product in productList.slice(
+            v-for="product in userList.slice(
               pagination.pageSize * (pagination.current - 1),
               pagination.pageSize * pagination.current,
             )"
@@ -111,7 +111,7 @@ export default {
     return {
       pagination: { current: 1, pageSize: 12, total: 0 },
       prefix,
-      productList: [],
+      userList: [],
       value: 'first',
       rowKey: 'index',
       tableLayout: 'auto',
@@ -144,23 +144,21 @@ export default {
   },
   mounted() {
     // this.dataLoading = true;
+    this.getList();
   },
   methods: {
     getList() {
-      this.$request
-        .get('/api/get-card-list')
-        .then((res) => {
-          if (res.code === 0) {
-            const { list = [] } = res.data;
-            this.productList = list;
-            this.pagination = {
-              ...this.pagination,
-              total: list.length,
-            };
-          }
+      this.$store
+        .dispatch('userManagement/getUserList', {
+          page: this.pagination.current,
+          pageSize: this.pagination.pageSize,
         })
-        .catch((e: Error) => {
-          console.log(e);
+        .then((res) => {
+          this.userList = res.data;
+          this.pagination = {
+            ...this.pagination,
+            total: res.total,
+          };
         })
         .finally(() => {
           this.dataLoading = false;
@@ -192,7 +190,7 @@ export default {
     },
     onConfirmDelete(): void {
       const { index } = this.deleteProduct;
-      this.productList.splice(index - 1, 1);
+      this.userList.splice(index - 1, 1);
       this.confirmVisible = false;
       this.$message.success('删除成功');
     },
