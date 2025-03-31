@@ -1,26 +1,16 @@
 <template>
   <header class="login-header">
-    <logo-full-icon class="logo" />
-    <div class="operations-container">
-      <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
-        <logo-github-icon class="icon" />
-      </t-button>
-      <t-button theme="default" shape="square" variant="text" @click="navToHelper">
-        <help-circle-icon class="icon" />
-      </t-button>
+    <div class="logo"></div>
+    <!-- <div class="operations-container">
       <t-button theme="default" shape="square" variant="text" @click="toggleSettingPanel">
         <setting-icon class="icon" />
       </t-button>
-    </div>
+    </div> -->
   </header>
 </template>
 
 <script>
-import LogoFullIcon from '@/assets/assets-logo-full.svg';
-import { LogoGithubIcon, HelpCircleIcon, SettingIcon } from 'tdesign-icons-vue';
-
 export default {
-  components: { LogoFullIcon, LogoGithubIcon, HelpCircleIcon, SettingIcon },
   methods: {
     navToGitHub() {
       window.open('https://github.com/Tencent/tdesign-vue-starter');
