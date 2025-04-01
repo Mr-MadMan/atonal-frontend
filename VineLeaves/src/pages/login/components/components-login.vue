@@ -41,7 +41,7 @@
     </template>
 
     <t-form-item v-if="type !== 'qrcode'" class="btn-container">
-      <t-button block size="large" type="submit"> 登录 </t-button>
+      <t-button block size="large" type="submit" :loading="loading"> 登录 </t-button>
     </t-form-item>
 
     <div class="switch-container">
@@ -54,18 +54,14 @@ import Vue from 'vue';
 import { UserIcon, LockOnIcon, BrowseOffIcon, BrowseIcon } from 'tdesign-icons-vue';
 
 const INITIAL_DATA = {
-  // phone: '',
   account: 'admin',
   password: '',
-  // verifyCode: '',
   // checked: false,
 };
 
 const FORM_RULES = {
-  // phone: [{ required: true, message: '手机号必填', type: 'error' }],
   account: [{ required: true, message: '账号必填', type: 'error' }],
   password: [{ required: true, message: '密码必填', type: 'error' }],
-  // verifyCode: [{ required: true, message: '验证码必填', type: 'error' }],
 };
 
 /** 高级详情 */
@@ -85,6 +81,7 @@ export default Vue.extend({
       showPsw: false,
       countDown: 0,
       intervalTimer: null,
+      loading: false,
     };
   },
   beforeDestroy() {
@@ -97,8 +94,10 @@ export default Vue.extend({
     },
     async onSubmit({ validateResult }) {
       if (validateResult === true) {
-        await this.$store.dispatch('user/login', this.formData);
-
+        this.loading = true;
+        await this.$store.dispatch('user/login', this.formData).finally(() => {
+          this.loading = false;
+        });
         this.$message.success('登录成功');
         this.$router.replace('/').catch(() => '');
       }

@@ -41,7 +41,10 @@ instance.interceptors.response.use(
   (err) => {
     const { config } = err;
 
-    if (!config || !config.retry) return Promise.reject(err);
+    if (!config || !config.retry) {
+      message.error('请求超时，请稍后重试');
+      return Promise.reject(err);
+    }
 
     config.retryCount = config.retryCount || 0;
 
