@@ -1,0 +1,71 @@
+import axios from 'axios';
+import { message } from 'tdesign-vue';
+import proxy from '../config/host';
+import { TOKEN_NAME } from '@/config/global';
+
+const env = import.meta.env.MODE || 'dev';
+
+console.log('env', env);
+
+const API_HOST = env === 'mock' ? '/' : proxy[env].API; // 如果是mock模式 就不配置host 会走本地Mock拦截
+
+const CODE = {
+  LOGIN_TIMEOUT: 1000,
+  REQUEST_SUCCESS: [0, 200],
+  REQUEST_FOBID: 1001,
+};
+
+const instance = axios.create({
+  baseURL: API_HOST,
+  timeout: 10000,
+  withCredentials: true,
+});
+
+// eslint-disable-next-line
+// @ts-ignore
+// axios的retry ts类型有问题
+instance.interceptors.retry = 3;
+
+instance.interceptors.request.use((config) => {
+  config.headers['session-id'] = localStorage.getItem(TOKEN_NAME);
+  return config;
+});
+
+instance.interceptors.response.use(
+  (response) => {
+    if (response.status === 200) {
+      const { data } = response;
+      if (CODE.REQUEST_SUCCESS.includes(data.code)) {
+        return data;
+      }
+      message.error(data?.msg || '请求失败');
+      return Promise.reject(data);
+    }
+  },
+  (err) => {
+    const { config } = err;
+
+    if (!config || !config.retry) {
+      return Promise.reject(err);
+    }
+
+    config.retryCount = config.retryCount || 0;
+
+    if (config.retryCount >= config.retry) {
+      message.error('请求超时，请稍后重试');
+      return Promise.reject(err);
+    }
+
+    config.retryCount += 1;
+
+    const backoff = new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({});
+      }, config.retryDelay || 1);
+    });
+
+    return backoff.then(() => instance(config));
+  },
+);
+
+export default instance;
