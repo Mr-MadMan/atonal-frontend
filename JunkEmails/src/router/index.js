@@ -13,13 +13,13 @@ export const asyncRouterList = [...baseRouters, ...componentsRouters, ...othersR
 const defaultRouterList = [
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: () => import('@/pages/login/index.vue'),
   },
   // 登录成功重定向路由
   {
     path: '/',
-    redirect: '/user-management/base',
+    redirect: '/dashboard/base',
   },
   ...asyncRouterList,
   {
@@ -40,7 +40,7 @@ const createRouter = () =>
       例如你的应用部署在 https://example.com/my-app/
       可以设置 base: '/my-app/'
     */
-    base: env === 'prod' ? '/vine-leaves/' : null,
+    base: env === 'prod' ? '/junk-emails/' : null,
     routes: defaultRouterList,
     scrollBehavior() {
       return { x: 0, y: 0 };

@@ -1,34 +1,30 @@
 <template>
   <t-row :gutter="[16, 16]">
     <t-col :xs="6" :xl="3" v-for="(item, index) in panelList" :key="item.title">
-      <t-card
-        :bordered="false"
-        :title="item.title"
-        :style="{ height: '168px' }"
-        :class="{ 'dashboard-item': true, 'dashboard-item--main-color': index == 0 }"
-      >
+      <t-card :bordered="false" :title="item.title" :style="{ height: '168px' }" :class="{ 'dashboard-item': true }">
+        <!-- 'dashboard-item--main-color': index == 0  -->
         <div class="dashboard-item-top">
           <span :style="{ fontSize: `${resizeTime * 36}px` }">{{ item.number }}</span>
         </div>
         <div class="dashboard-item-left">
-          <div
-            v-if="index === 0"
-            id="moneyContainer"
+          <span v-if="index === 0" :style="{ marginTop: `-8px` }">
+            <!-- id="moneyContainer"
             class="dashboard-chart-container"
-            :style="{ width: `${resizeTime * 120}px`, height: `${resizeTime * 66}px` }"
-          ></div>
+            :style="{ width: `${resizeTime * 120}px`, height: `${resizeTime * 66}px` }" -->
+            <usergroup-icon />
+          </span>
           <div
             v-else-if="index === 1"
             id="refundContainer"
             class="dashboard-chart-container"
             :style="{ width: `${resizeTime * 120}px`, height: `${resizeTime * 42}px` }"
           ></div>
-          <span v-else-if="index === 2" :style="{ marginTop: `-24px` }">
+          <!-- <span v-else-if="index === 2" :style="{ marginTop: `-24px` }">
             <usergroup-icon />
           </span>
           <span v-else :style="{ marginTop: '-24px' }">
             <file-icon />
-          </span>
+          </span> -->
         </div>
         <!-- <template #footer>
           <div class="dashboard-item-bottom">
@@ -40,6 +36,7 @@
                 :is-reverse-color="index === 0"
                 :describe="item.upTrend || item.downTrend"
               />
+
             </div>
             <chevron-right-icon />
           </div>
@@ -57,7 +54,6 @@ import { mapState } from 'vuex';
 // import Trend from '@/components/trend/index.vue';
 import { constructInitDashboardDataset } from '../index';
 import { changeChartsTheme } from '@/utils/color';
-import { PANE_LIST } from '@/service/service-base';
 
 echarts.use([LineChart, BarChart, CanvasRenderer]);
 
@@ -66,17 +62,27 @@ export default {
   components: {
     // Trend,
     UsergroupIcon,
-    FileIcon,
+    // FileIcon,
     // ChevronRightIcon,
   },
   data() {
     return {
       resizeTime: 1,
-      panelList: PANE_LIST,
+      panelList: [
+        {
+          title: '总用户数 (个)',
+          number: 0,
+        },
+        {
+          title: '今日活跃用户（个）',
+          number: 0,
+        },
+      ],
     };
   },
   computed: {
     ...mapState('setting', ['brandTheme', 'mode']), // 这里需要用到主题色和主题模式的全局配置
+    ...mapState('system', ['userStatistic']), // 这里需要用到主题色和主题模式的全局配置
   },
   watch: {
     brandTheme() {
@@ -87,6 +93,12 @@ export default {
         item.dispose();
       });
       this.renderCharts();
+    },
+    userStatistic(info) {
+      if (Object.keys(info).length > 0) {
+        this.panelList[0].number = info.total_user;
+        this.panelList[1].number = info.total_today_login;
+      }
     },
   },
   mounted() {
@@ -107,11 +119,11 @@ export default {
       } else {
         this.resizeTime = 1;
       }
-      this.moneyCharts.resize({
-        // 根据父容器的大小设置大小
-        width: `${this.resizeTime * 120}px`,
-        height: `${this.resizeTime * 66}px`,
-      });
+      // this.moneyCharts.resize({
+      //   // 根据父容器的大小设置大小
+      //   width: `${this.resizeTime * 120}px`,
+      //   height: `${this.resizeTime * 66}px`,
+      // });
 
       this.refundChart.resize({
         // 根据父容器的大小设置大小
@@ -123,9 +135,9 @@ export default {
     renderCharts() {
       const { chartColors } = this.$store.state.setting;
       // 收入汇总图
-      if (!this.moneyContainer) this.moneyContainer = document.getElementById('moneyContainer');
-      this.moneyCharts = echarts.init(this.moneyContainer);
-      this.moneyCharts.setOption(constructInitDashboardDataset('line'));
+      // if (!this.moneyContainer) this.moneyContainer = document.getElementById('moneyContainer');
+      // this.moneyCharts = echarts.init(this.moneyContainer);
+      // this.moneyCharts.setOption(constructInitDashboardDataset('line'));
 
       // 退款图
       if (!this.refundContainer) this.refundContainer = document.getElementById('refundContainer');

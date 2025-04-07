@@ -13,20 +13,20 @@
     <!-- 中部图表  -->
     <middle-chart class="row-container" />
     <!-- 出入库概览 -->
-    <output-overview class="row-container" />
+    <!-- <output-overview class="row-container" /> -->
   </div>
 </template>
 <script>
 import TopPanel from './components/TopPanel.vue';
 import MiddleChart from './components/MiddleChart.vue';
-import OutputOverview from './components/OutputOverview.vue';
+// import OutputOverview from './components/OutputOverview.vue';
 
 export default {
   name: 'DashboardBase',
   components: {
     TopPanel,
     MiddleChart,
-    OutputOverview,
+    // OutputOverview,
   },
   mounted() {
     this.$store.dispatch('system/getServerInfo');

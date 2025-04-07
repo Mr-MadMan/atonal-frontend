@@ -8,8 +8,8 @@
     @submit="onSubmit"
   >
     <template v-if="type == 'password'">
-      <t-form-item name="account">
-        <t-input v-model="formData.account" size="large" placeholder="请输入账号：admin">
+      <t-form-item name="username">
+        <t-input v-model="formData.username" size="large" placeholder="请输入账号">
           <template #prefix-icon>
             <user-icon />
           </template>
@@ -54,13 +54,13 @@ import Vue from 'vue';
 import { UserIcon, LockOnIcon, BrowseOffIcon, BrowseIcon } from 'tdesign-icons-vue';
 
 const INITIAL_DATA = {
-  account: 'admin',
+  username: 'admin',
   password: '',
   // checked: false,
 };
 
 const FORM_RULES = {
-  account: [{ required: true, message: '账号必填', type: 'error' }],
+  username: [{ required: true, message: '账号必填', type: 'error' }],
   password: [{ required: true, message: '密码必填', type: 'error' }],
 };
 

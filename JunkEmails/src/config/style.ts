@@ -1,5 +1,5 @@
 export default {
-  showFooter: true,
+  showFooter: false,
   isSidebarCompact: false,
   showBreadcrumb: false,
   mode: 'light',

@@ -60,6 +60,7 @@ const mutations = {
 const getters = {
   token: (state) => state.token,
   roles: (state) => state.userInfo?.roles,
+  userInfo: (state) => state.userInfo,
 };
 
 const actions = {
@@ -82,7 +83,7 @@ const actions = {
 
       if (res.code === 0) {
         const currUser = res.data.user;
-        const roles = currUser.is_admin ? ['ALL_ROUTERS'] : ['UserIndex', 'DashboardBase', 'login'];
+        const roles = currUser.is_admin ? ['ALL_ROUTERS'] : ['UserIndex', 'Login', 'AnalysisIndex'];
         Object.assign(currUser, { roles });
         commit('setUserInfo', currUser);
         return roles;
