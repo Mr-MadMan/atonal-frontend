@@ -41,28 +41,26 @@ export default Vue.extend({
   computed: {
     dynamicComponent() {
       switch (this.type) {
-      case '403':
-        return Result403Icon;
-      case '404':
-        return Result404Icon;
-      case '500':
-        return Result500Icon;
-      case 'ie':
-        return ResultIeIcon;
-      case 'wifi':
-        return ResultWifiIcon;
-      case 'maintenance':
-        return ResultMaintenanceIcon;
-      default:
-        return Result403Icon;
+        case '403':
+          return Result403Icon;
+        case '404':
+          return Result404Icon;
+        case '500':
+          return Result500Icon;
+        case 'ie':
+          return ResultIeIcon;
+        case 'wifi':
+          return ResultWifiIcon;
+        case 'maintenance':
+          return ResultMaintenanceIcon;
+        default:
+          return Result403Icon;
       }
     },
   },
 });
 </script>
-<style lang="less" scoped>
-@import '@/style/variables';
-
+<style lang="scss" scoped>
 .result {
   &-link {
     color: var(--td-brand-color);

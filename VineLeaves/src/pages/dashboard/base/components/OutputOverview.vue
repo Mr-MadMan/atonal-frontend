@@ -139,15 +139,13 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .dashboard-overview-card {
-  /deep/ .t-card__header {
+  ::v-deep .t-card__header {
     padding-bottom: 24px;
   }
 
-  /deep/ .t-card__title {
+  ::v-deep .t-card__title {
     font-size: 20px;
     font-weight: 500;
   }
@@ -164,7 +162,7 @@ export default {
 .inner-card {
   padding: 24px 0;
 
-  /deep/ .t-card__header {
+  ::v-deep .t-card__header {
     padding-bottom: 0;
   }
 

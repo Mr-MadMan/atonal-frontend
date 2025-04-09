@@ -145,9 +145,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .table-tree-container {
   background-color: var(--td-bg-color-container);
   border-radius: var(--td-radius-default);

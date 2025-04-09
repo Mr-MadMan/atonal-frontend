@@ -15,9 +15,7 @@ export default {
   components: { result },
 };
 </script>
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .t-button + .t-button {
   margin-left: var(--td-comp-margin-s);
 }

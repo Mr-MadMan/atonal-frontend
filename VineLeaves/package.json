@@ -51,6 +51,7 @@
     "lint-staged": "^13.0.3",
     "mockjs": "^1.1.0",
     "prettier": "^2.6.0",
+    "sass": "^1.86.1",
     "stylelint": "~13.13.1",
     "stylelint-config-prettier": "~9.0.3",
     "stylelint-less": "1.0.5",
@@ -58,7 +59,7 @@
     "vite": "^4.1.4",
     "vite-plugin-mock": "^3.0.0",
     "vite-plugin-theme": "^0.8.1",
-    "vite-plugin-vue2": "^2.0.1",
+    "vite-plugin-vue2": "^2.0.3",
     "vite-plugin-vue2-svg": "~0.4.0",
     "vue-template-compiler": "~2.6.14"
   },

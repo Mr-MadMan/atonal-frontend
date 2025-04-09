@@ -66,9 +66,7 @@ export default Vue.extend({
   },
 });
 </script>
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .header-menu-search {
   display: flex;
   margin-left: 16px;
@@ -78,12 +76,12 @@ export default Vue.extend({
       background: var(--td-bg-color-secondarycontainer);
     }
 
-    /deep/ .t-icon {
+    &::v-deep .t-icon {
       color: var(--td-brand-color);
     }
   }
 
-  /deep/ .t-icon {
+  ::v-deep .t-icon {
     font-size: 20px;
     color: var(--td-text-color-primary);
   }
@@ -92,7 +90,7 @@ export default Vue.extend({
     border: none;
     outline: none;
     box-shadow: none;
-    transition: background @anim-duration-base linear;
+    transition: background $anim-duration-base linear;
 
     &:hover {
       background: var(--td-bg-color-secondarycontainer);
@@ -102,7 +100,7 @@ export default Vue.extend({
 
 .header-search {
   width: 200px;
-  transition: width @anim-duration-base @anim-time-fn-easing;
+  transition: width $anim-duration-base $anim-time-fn-easing;
 
   .t-input {
     border: 0;
@@ -120,7 +118,7 @@ export default Vue.extend({
 }
 
 .t-button {
-  transition: opacity @anim-duration-base @anim-time-fn-easing;
+  transition: opacity $anim-duration-base $anim-time-fn-easing;
 }
 
 .search-icon-hide {

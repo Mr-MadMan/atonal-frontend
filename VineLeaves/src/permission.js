@@ -33,7 +33,13 @@ router.beforeEach(async (to, from, next) => {
 
         await store.dispatch('permission/initRoutes', store.getters['user/roles']);
 
-        next({ ...to });
+        const userInfo = store.getters['user/userInfo'];
+
+        if (userInfo.is_admin) {
+          next({ ...to });
+        } else {
+          next({ name: 'UserIndex', replace: true });
+        }
       } catch (error) {
         await store.commit('user/removeToken');
         next(`/login?redirect=${to.path}`);

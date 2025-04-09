@@ -40,7 +40,7 @@ import Setting from './setting.vue';
 import { prefix } from '@/config/global';
 import { SettingType } from '@/interface';
 
-import '@/style/layout.less';
+import '@/style/layout.scss';
 
 const name = `${prefix}-base-layout`;
 

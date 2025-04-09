@@ -241,9 +241,7 @@ export default {
   },
 };
 </script>
-<style lang="less">
-@import '@/style/variables.less';
-
+<style lang="scss">
 .tdesign-setting {
   z-index: 100;
   position: fixed;

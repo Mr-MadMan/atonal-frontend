@@ -159,9 +159,7 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .row-margin {
   margin-top: 16px;
 }
@@ -170,12 +168,12 @@ export default {
 .dashboard-detail-card {
   padding: 8px;
 
-  /deep/ .t-card__title {
+  ::v-deep .t-card__title {
     font-size: 20px;
     font-weight: 500;
   }
 
-  /deep/ .t-card__actions {
+  ::v-deep .t-card__actions {
     display: flex;
     align-items: center;
   }
@@ -188,11 +186,11 @@ export default {
   height: 170px;
   padding: 8px;
 
-  /deep/ .t-card__header {
+  ::v-deep .t-card__header {
     padding-bottom: 8px;
   }
 
-  /deep/ .t-card__body {
+  ::v-deep .t-card__body {
     flex: 1;
     display: flex;
     padding-top: 0;

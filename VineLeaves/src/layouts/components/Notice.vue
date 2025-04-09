@@ -102,9 +102,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .header-msg {
   width: 400px;
   height: 500px;

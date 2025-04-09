@@ -16,10 +16,8 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables';
-
-.@{starter-prefix}-footer {
+<style lang="scss" scoped>
+.#{$starter-prefix}-footer {
   color: var(--td-text-color-placeholder);
   line-height: 20px;
   text-align: center;

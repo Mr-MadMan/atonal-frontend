@@ -29,9 +29,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .result-slot-container {
   position: relative;
   display: flex;

@@ -16,6 +16,20 @@ export default [
       },
     ],
   },
+  {
+    path: '/analysis',
+    name: 'Analysis',
+    component: Layout,
+    redirect: '/analysis/index',
+    meta: { title: '智能分析', icon: 'analysis' },
+    children: [
+      {
+        path: 'index',
+        name: 'AnalysisIndex',
+        component: () => import('@/pages/analysis/index.vue'),
+      },
+    ],
+  },
   // 三级菜单配置
   // {
   //   path: '/menu',

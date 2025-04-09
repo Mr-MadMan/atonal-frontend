@@ -2,7 +2,7 @@ import { loadEnv } from 'vite';
 import { viteMockServe } from 'vite-plugin-mock';
 import { createVuePlugin } from 'vite-plugin-vue2';
 import { createSvgPlugin } from 'vite-plugin-vue2-svg';
-
+import fs from 'fs';
 import path from 'path';
 
 const CWD = process.cwd();
@@ -24,6 +24,9 @@ export default ({ mode }) => {
         less: {
           modifyVars: {},
         },
+        scss: {
+          additionalData: `@import "@/style/variables.scss";`,
+        }
       },
     },
 

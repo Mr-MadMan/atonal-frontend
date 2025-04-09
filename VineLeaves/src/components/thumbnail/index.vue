@@ -29,9 +29,7 @@ export default Vue.extend({
   },
 });
 </script>
-<style lang="less" scoped>
-@import url('@/style/index.less');
-
+<style lang="scss" scoped>
 .thumbnail {
   &-container {
     display: inline-block;

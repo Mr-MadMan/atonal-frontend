@@ -25,7 +25,7 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .color-container {
   width: 24px;
   height: 24px;

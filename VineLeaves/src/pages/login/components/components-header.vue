@@ -12,21 +12,13 @@
 <script>
 export default {
   methods: {
-    navToGitHub() {
-      window.open('https://github.com/Tencent/tdesign-vue-starter');
-    },
-    navToHelper() {
-      window.open('https://tdesign.tencent.com/starter/docs/get-started');
-    },
     toggleSettingPanel() {
       this.$store.commit('setting/toggleSettingPanel', true);
     },
   },
 };
 </script>
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .login-header {
   height: var(--td-comp-size-xxxl);
   padding: 0 24px;

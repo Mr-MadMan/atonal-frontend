@@ -1,52 +1,33 @@
-import { ViewModuleIcon, Edit1Icon, LayersIcon } from 'tdesign-icons-vue';
+import { ViewModuleIcon } from 'tdesign-icons-vue';
 import Layout from '@/layouts/index.vue';
 
 export default [
   {
-    path: '/list',
-    name: 'list',
+    path: '/user-management',
+    name: 'UserManagement',
     component: Layout,
-    redirect: '/list/base',
-    meta: { title: '治疗方案管理', icon: ViewModuleIcon },
-    children: [
-      // {
-      //   path: 'base',
-      //   name: 'ListBase',
-      //   component: () => import('@/pages/list/base/index.vue'),
-      //   meta: { title: '基础列表页' },
-      // },
-      {
-        path: 'card',
-        name: 'ListCard',
-        component: () => import('@/pages/list/card/index.vue'),
-        meta: { title: '用户列表' },
-      },
-      // {
-      //   path: 'filter',
-      //   name: 'ListFilter',
-      //   component: () => import('@/pages/list/filter/index.vue'),
-      //   meta: { title: '筛选列表页' },
-      // },
-    ],
-  },
-  {
-    path: '/form',
-    name: 'form',
-    component: Layout,
-    redirect: '/form/base',
-    meta: { title: '表单页', icon: Edit1Icon },
+    redirect: '/user-management/base',
+    meta: { title: '用户管理', icon: ViewModuleIcon },
     children: [
       {
         path: 'base',
-        name: 'FormBase',
-        component: () => import('@/pages/form/base/index.vue'),
-        meta: { title: '基础表单页' },
+        name: 'UserList',
+        component: () => import('@/pages/list/card/index.vue'),
+        meta: { title: '用户列表' },
       },
+    ],
+  },
+  {
+    path: '/treatment',
+    name: 'Treatment',
+    component: Layout,
+    redirect: '/treatment/index',
+    meta: { title: '治疗方案', icon: ViewModuleIcon },
+    children: [
       {
-        path: 'step',
-        name: 'FormStep',
-        component: () => import('@/pages/form/step/index.vue'),
-        meta: { title: '分步表单页' },
+        path: 'index',
+        name: 'TreatmentIndex',
+        component: () => import('@/pages/treatment/index.vue'),
       },
     ],
   },

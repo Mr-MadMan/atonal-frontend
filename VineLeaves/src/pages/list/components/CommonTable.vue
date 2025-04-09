@@ -279,9 +279,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .list-common-table {
   background-color: var(--td-bg-color-container);
   padding: 30px 32px;

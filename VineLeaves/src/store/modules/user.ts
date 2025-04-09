@@ -60,6 +60,7 @@ const mutations = {
 const getters = {
   token: (state) => state.token,
   roles: (state) => state.userInfo?.roles,
+  userInfo: (state) => state.userInfo,
 };
 
 const actions = {
@@ -75,14 +76,14 @@ const actions = {
   async getUserInfo({ commit, state }) {
     try {
       const res = await request.get<any, UserInfoResponse>(`/api/user`, {
-        headers: {
-          'session-id': state.token,
-        },
+        // headers: {
+        //   'session-id': state.token,
+        // },
       });
 
       if (res.code === 0) {
         const currUser = res.data.user;
-        const roles = currUser.is_admin ? ['ALL_ROUTERS'] : ['UserIndex', 'DashboardBase', 'login'];
+        const roles = currUser.is_admin ? ['ALL_ROUTERS'] : ['UserIndex', 'Login', 'AnalysisIndex'];
         Object.assign(currUser, { roles });
         commit('setUserInfo', currUser);
         return roles;
@@ -94,9 +95,9 @@ const actions = {
   async logout({ commit }) {
     try {
       const res = await request.delete<any, LoginResponse>(`/api/user`, {
-        headers: {
-          'session-id': state.token,
-        },
+        // headers: {
+        //   'session-id': state.token,
+        // },
       });
       if (res.code === 0) {
         commit('removeToken');
@@ -116,11 +117,11 @@ const actions = {
           old_password,
           new_password,
         },
-        {
-          headers: {
-            'session-id': state.token,
-          },
-        },
+        // {
+        //   headers: {
+        //     'session-id': state.token,
+        //   },
+        // },
       );
       if (res.code === 0) {
         commit('removeToken');

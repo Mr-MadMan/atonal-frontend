@@ -1,32 +1,32 @@
 <template>
   <t-row :gutter="[16, 16]">
-    <t-col :xs="12" :xl="9">
-      <t-card title="统计数据" subtitle="(万元)" class="dashboard-chart-card" :bordered="false">
-        <template #actions>
-          <div class="dashboard-chart-title-container">
-            <t-date-range-picker
-              class="card-date-picker-container"
-              theme="primary"
-              mode="date"
-              :default-value="LAST_7_DAYS"
-              @change="onCurrencyChange"
-            />
-          </div>
-        </template>
-        <div
-          id="monitorContainer"
-          ref="monitorContainer"
-          :style="{ width: '100%', height: `${resizeTime * 326}px` }"
-        ></div>
-      </t-card>
-    </t-col>
-    <t-col :xs="12" :xl="3">
-      <t-card title="销售渠道" :subtitle="currentMonth" class="dashboard-chart-card" :bordered="false">
-        <div
-          id="countContainer"
-          ref="countContainer"
-          :style="{ width: `${resizeTime * 326}px`, height: `${resizeTime * 326}px`, margin: '0 auto' }"
-        ></div>
+    <t-col :xs="12" :xl="12">
+      <t-card title="服务器配置信息" class="dashboard-chart-card" :bordered="false">
+        <div class="chart-container">
+          <div
+            id="cpuPie"
+            ref="cpuPie"
+            :style="{ width: `${resizeTime * 326}px`, height: `${resizeTime * 326}px`, margin: '0 auto' }"
+          ></div>
+          <div
+            id="diskPie"
+            ref="diskPie"
+            :style="{ width: `${resizeTime * 326}px`, height: `${resizeTime * 326}px`, margin: '0 auto' }"
+          ></div>
+          <div
+            id="memPie"
+            ref="memPie"
+            :style="{ width: `${resizeTime * 326}px`, height: `${resizeTime * 326}px`, margin: '0 auto' }"
+          ></div>
+        </div>
+        <t-descriptions title="其他配置信息">
+          <t-descriptions-item label="OS">{{
+            serverInfo.os && serverInfo.os.system + ' ' + serverInfo.os.version
+          }}</t-descriptions-item>
+          <t-descriptions-item label="MySql">{{ serverInfo.mysql && serverInfo.mysql }}</t-descriptions-item>
+          <t-descriptions-item label="Python">{{ serverInfo.python && serverInfo.python }}</t-descriptions-item>
+          <t-descriptions-item label="Jieba">{{ serverInfo.jieba && serverInfo.jieba }}</t-descriptions-item>
+        </t-descriptions>
       </t-card>
     </t-col>
   </t-row>
@@ -39,7 +39,6 @@ import * as echarts from 'echarts/core';
 import { mapState } from 'vuex';
 
 import { LAST_7_DAYS } from '@/utils/date';
-
 import { getPieChartDataSet, getLineChartDataSet } from '../index';
 import { changeChartsTheme } from '@/utils/color';
 
@@ -52,20 +51,73 @@ export default {
       LAST_7_DAYS,
       resizeTime: 1,
       currentMonth: this.getThisMonth(),
+      cpuPieChart: null,
+      diskPieChart: null,
+      memPieChart: null,
     };
   },
   computed: {
     ...mapState('setting', ['brandTheme', 'mode']), // 这里需要用到主题色和主题模式的全局配置
+    ...mapState('system', ['serverInfo', 'userStatistic']), // 这里需要用到主题色和主题模式的全局配置
   },
   watch: {
     brandTheme() {
-      changeChartsTheme([this.countChart, this.monitorChart]);
+      changeChartsTheme([this.cpuPieChart, this.monitorChart]);
     },
     mode() {
-      [this.countChart, this.monitorChart].forEach((item) => {
+      [this.cpuPieChart, this.diskPieChart, this.monitorChart].forEach((item) => {
         item.dispose();
       });
       this.renderCharts();
+    },
+    serverInfo(info) {
+      if (info.cpu) {
+        const option = getPieChartDataSet(
+          [
+            { value: info.cpu.usage, name: 'CPU使用率' },
+            { value: 100 - info.cpu.usage, name: 'CPU空闲率' },
+          ],
+          this.$store.state.setting.chartColors,
+        );
+        this.cpuPieChart.setOption(option);
+        this.cpuPieChart.dispatchAction({
+          type: 'highlight',
+          seriesIndex: 0,
+          dataIndex: 0,
+        });
+      }
+
+      if (info.disk) {
+        const option = getPieChartDataSet(
+          [
+            { value: info.disk.usage, name: '磁盘使用率' },
+            { value: 100 - info.disk.usage, name: '磁盘空闲率' },
+          ],
+          this.$store.state.setting.chartColors,
+        );
+        this.diskPieChart.setOption(option);
+        this.diskPieChart.dispatchAction({
+          type: 'highlight',
+          seriesIndex: 0,
+          dataIndex: 0,
+        });
+      }
+
+      if (info.mem) {
+        const option = getPieChartDataSet(
+          [
+            { value: info.mem.usage, name: '内存使用率' },
+            { value: 100 - info.mem.usage, name: '内存空闲率' },
+          ],
+          this.$store.state.setting.chartColors,
+        );
+        this.memPieChart.setOption(option);
+        this.memPieChart.dispatchAction({
+          type: 'highlight',
+          seriesIndex: 0,
+          dataIndex: 0,
+        });
+      }
     },
   },
   mounted() {
@@ -108,51 +160,64 @@ export default {
         this.resizeTime = 1;
       }
 
-      this.countChart.resize({
-        // 根据父容器的大小设置大小
+      // 根据父容器的大小设置大小
+      this.cpuPieChart.resize({
         width: `${this.resizeTime * 326}px`,
         height: `${this.resizeTime * 326}px`,
       });
 
-      this.monitorChart.resize({
-        // 根据父容器的大小设置大小
-        width: this.monitorContainer.clientWidth,
+      this.diskPieChart.resize({
+        width: `${this.resizeTime * 326}px`,
+        height: `${this.resizeTime * 326}px`,
+      });
+
+      this.memPieChart.resize({
+        width: `${this.resizeTime * 326}px`,
         height: `${this.resizeTime * 326}px`,
       });
     },
     renderCharts() {
-      const { chartColors } = this.$store.state.setting;
-
-      // 资金走势
-      if (!this.monitorContainer) {
-        this.monitorContainer = document.getElementById('monitorContainer');
+      // 初始化cpu饼图
+      if (!this.cpuPie) {
+        this.cpuPie = document.getElementById('cpuPie');
       }
-      this.monitorChart = echarts.init(this.monitorContainer);
-      this.monitorChart.setOption(getLineChartDataSet({ ...chartColors }));
+      this.cpuPieChart = echarts.init(this.cpuPie);
 
-      // 销售合同占比
-      if (!this.countContainer) {
-        this.countContainer = document.getElementById('countContainer');
+      // 初始化磁盘饼图
+      if (!this.diskPie) {
+        this.diskPie = document.getElementById('diskPie');
       }
-      this.countChart = echarts.init(this.countContainer);
+      this.diskPieChart = echarts.init(this.diskPie);
 
-      const option = getPieChartDataSet(chartColors);
-      this.countChart.setOption(option);
+      // 初始化内存饼图
+      if (!this.memPie) {
+        this.memPie = document.getElementById('memPie');
+      }
+      this.memPieChart = echarts.init(this.memPie);
     },
   },
 };
 </script>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .dashboard-chart-card {
   padding: 8px;
 
-  /deep/ .t-card__header {
+  ::v-deep .t-card__header {
     padding-bottom: 24px;
   }
 
-  /deep/ .t-card__title {
+  ::v-deep .t-card__title {
     font-size: 20px;
     font-weight: 500;
   }
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+  height: fit-content;
+  margin-bottom: 20px;
 }
 </style>

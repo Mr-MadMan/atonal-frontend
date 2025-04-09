@@ -1,7 +1,7 @@
 <template>
   <transition name="fade" mode="out-in">
-    <keep-alive :include="this.aliveViews">
-      <router-view v-if="!this.isRefreshing" />
+    <keep-alive :include="aliveViews">
+      <router-view v-if="!isRefreshing" />
     </keep-alive>
   </transition>
 </template>
@@ -29,12 +29,10 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-@import '@/style/variables';
-
+<style lang="scss" scoped>
 .fade-leave-active,
 .fade-enter-active {
-  transition: opacity @anim-duration-slow @anim-time-fn-easing;
+  transition: opacity $anim-duration-slow $anim-time-fn-easing;
 }
 .fade-enter,
 .fade-leave-to {

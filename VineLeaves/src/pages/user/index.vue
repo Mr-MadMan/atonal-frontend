@@ -13,7 +13,7 @@
           </t-button>
         </template>
         <t-row class="content" justify="space-between">
-          <t-col v-for="(item, index) in USER_INFO_LIST" :key="index" class="contract" :span="item.span || 3">
+          <t-col v-for="(item, index) in userInfoList" :key="index" class="contract" :span="item.span || 3">
             <div class="contract-title">
               {{ item.title }}
             </div>
@@ -24,14 +24,6 @@
         </t-row>
       </t-card>
     </t-col>
-
-    <!-- <t-col :flex="1">
-      <t-card class="user-intro" :bordered="false">
-        <t-avatar size="90px">T</t-avatar>
-        <div class="name">My Account</div>
-        <div class="position">XXG 港澳业务拓展组员工 直客销售</div>
-      </t-card>
-    </t-col> -->
     <dialog-change-password ref="changePasswordRef" />
   </t-row>
 </template>
@@ -69,6 +61,7 @@ export default {
       USER_INFO_LIST,
       TEAM_MEMBERS,
       PRODUCT_LIST,
+      userInfoList: [],
     };
   },
   computed: {
@@ -92,6 +85,12 @@ export default {
     // this.$nextTick(() => {
     //   this.updateContainer();
     // });
+    this.userInfoList = [
+      {
+        title: '账户名',
+        content: this.userInfo.username,
+      },
+    ];
   },
   methods: {
     /** 图表选择 */
@@ -135,6 +134,6 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-@import url('./index.less');
+<style lang="scss" scoped>
+@import './index.scss';
 </style>

@@ -1,25 +1,25 @@
 import VueRouter from 'vue-router';
 
-// import baseRouters from './modules/base';
+import baseRouters from './modules/base';
 import componentsRouters from './modules/components';
 import othersRouters from './modules/others';
 
 const env = import.meta.env.MODE || 'dev';
 
 // 存放动态路由
-export const asyncRouterList = [...componentsRouters, ...othersRouters];
+export const asyncRouterList = [...baseRouters, ...componentsRouters, ...othersRouters];
 
 // 存放固定的路由
 const defaultRouterList = [
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: () => import('@/pages/login/index.vue'),
   },
   // 登录成功重定向路由
   {
     path: '/',
-    redirect: '/list/card',
+    redirect: '/dashboard/base',
   },
   ...asyncRouterList,
   {
@@ -42,9 +42,9 @@ const createRouter = () =>
     */
     base: env === 'prod' ? '/vine-leaves/' : null,
     routes: defaultRouterList,
-    scrollBehavior() {
-      return { x: 0, y: 0 };
-    },
+    // scrollBehavior() {
+    //   return { x: 0, y: 0 };
+    // },
   });
 
 const router = createRouter();

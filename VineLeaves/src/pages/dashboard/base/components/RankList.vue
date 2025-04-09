@@ -76,17 +76,15 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .dashboard-rank-card {
   padding: 8px;
 
-  /deep/ .t-card__header {
+  ::v-deep .t-card__header {
     padding-bottom: 24px;
   }
 
-  /deep/ .t-card__title {
+  ::v-deep .t-card__title {
     font-size: 20px;
     font-weight: 500;
   }

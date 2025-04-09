@@ -497,7 +497,7 @@ export function getAreaChartDataSet(): any {
  * @param {boolean} [isMonth=false]
  * @returns {*}
  */
-export function getColumnChartDataSet(isMonth = false) {
+export function getColumnChartDataSet(data, isMonth = false) {
   if (isMonth) {
     return {
       color: getChartListColor(),
@@ -523,7 +523,7 @@ export function getColumnChartDataSet(isMonth = false) {
       xAxis: [
         {
           type: 'category',
-          data: ['1', '4', '8', '12', '16', '20', '24'],
+          data: ['今日验证数', '4', '8', '12', '16'],
           axisTick: {
             alignWithLabel: true,
           },
@@ -536,17 +536,17 @@ export function getColumnChartDataSet(isMonth = false) {
       ],
       series: [
         {
-          name: '直接访问',
+          // name: '直接访问',
           type: 'bar',
           barWidth: '60%',
           data: [
-            getRandomArray(Math.random() * 100),
-            getRandomArray(Math.random() * 200),
-            getRandomArray(Math.random() * 300),
-            getRandomArray(Math.random() * 400),
-            getRandomArray(Math.random() * 500),
-            getRandomArray(Math.random() * 600),
-            getRandomArray(Math.random() * 700),
+            // getRandomArray(Math.random() * 100),
+            // getRandomArray(Math.random() * 200),
+            // getRandomArray(Math.random() * 300),
+            // getRandomArray(Math.random() * 400),
+            // getRandomArray(Math.random() * 500),
+            // getRandomArray(Math.random() * 600),
+            // getRandomArray(Math.random() * 700),
           ],
         },
       ],
@@ -562,12 +562,12 @@ export function getColumnChartDataSet(isMonth = false) {
         type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
       },
     },
-    legend: {
-      left: 'center',
-      bottom: '0%',
-      orient: 'horizontal', // legend 横向布局。
-      data: ['直接访问'],
-    },
+    // legend: {
+    //   left: 'center',
+    //   bottom: '0%',
+    //   orient: 'horizontal', // legend 横向布局。
+    //   data: ['今日垃圾数', '总垃圾数', '今日验证数', '总验证数'],
+    // },
     grid: {
       left: '3%',
       right: '4%',
@@ -577,7 +577,7 @@ export function getColumnChartDataSet(isMonth = false) {
     xAxis: [
       {
         type: 'category',
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+        data: ['今日验证垃圾数', '总验证垃圾数', '今日验证数', '总验证数'],
         axisTick: {
           alignWithLabel: true,
         },
@@ -590,35 +590,34 @@ export function getColumnChartDataSet(isMonth = false) {
     ],
     series: [
       {
-        name: '直接访问',
         type: 'bar',
         barWidth: '20%',
-        data: [
-          getRandomArray(Math.random() * 100),
-          getRandomArray(Math.random() * 200),
-          getRandomArray(Math.random() * 300),
-          getRandomArray(Math.random() * 400),
-          getRandomArray(Math.random() * 500),
-          getRandomArray(Math.random() * 600),
-          getRandomArray(Math.random() * 700),
-        ],
+        data,
       },
     ],
   };
 }
 
-export function getPieChartDataSet({
-  radius = 42,
-  textColor,
-  placeholderColor,
-  containerColor,
-}: { radius: number } & Record<string, string>) {
+/**
+ * 饼图数据结构
+ *
+ * @export
+ * @param {number} radius
+ * @param {string} textColor
+ * @param {string} placeholderColor
+ * @param {string} containerColor
+ * @returns {*}
+ */
+export function getPieChartDataSet(
+  data: Array<{ value: number; name: string }>,
+  { radius = 42, textColor, placeholderColor, containerColor }: { radius: number } & Record<string, string>,
+) {
   return {
     color: getChartListColor(),
     tooltip: {
       show: false,
-      trigger: 'axis',
-      position: null,
+      trigger: 'item',
+      position: 'inside',
     },
     grid: {
       top: '0',
@@ -638,25 +637,26 @@ export function getPieChartDataSet({
     },
     series: [
       {
-        name: '销售渠道',
         type: 'pie',
-        radius: ['48%', '60%'],
+        radius: ['50%', '70%'],
         avoidLabelOverlap: true,
-        selectedMode: true,
-        hoverAnimation: true,
+        selectedMode: 'single',
+        hoverAnimation: false,
+        // 是否不响应和触发鼠标悬停移入移出等操作
         silent: true,
+        selectedOffset: 0,
         itemStyle: {
           borderColor: containerColor,
           borderWidth: 1,
         },
         label: {
-          show: true,
+          show: false,
           position: 'center',
-          formatter: ['{value|{d}%}', '{name|{b}渠道占比}'].join('\n'),
+          // formatter: ['{value|{d}%}', '{name|{b}}'].join('\n'),
           rich: {
             value: {
               color: textColor,
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: 'normal',
               lineHeight: 46,
             },
@@ -670,7 +670,7 @@ export function getPieChartDataSet({
         emphasis: {
           label: {
             show: true,
-            formatter: ['{value|{d}%}', '{name|{b}渠道占比}'].join('\n'),
+            formatter: ['{value|{d}%}', '{name|{b}}'].join('\n'),
             rich: {
               value: {
                 color: textColor,
@@ -689,13 +689,7 @@ export function getPieChartDataSet({
         labelLine: {
           show: false,
         },
-        data: [
-          {
-            value: 1048,
-            name: '线上',
-          },
-          { value: radius * 7, name: '门店' },
-        ],
+        data,
       },
     ],
   };

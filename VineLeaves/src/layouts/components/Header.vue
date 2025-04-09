@@ -9,15 +9,11 @@
           <t-button theme="default" shape="square" variant="text" @click="changeCollapsed">
             <view-list-icon class="collapsed-icon" />
           </t-button>
-          <!-- <search :layout="layout" /> -->
         </div>
       </template>
       <menu-content v-show="layout !== 'side'" class="header-menu" :navData="menu" />
       <template #operations>
         <div class="operations-container">
-          <!-- 搜索框 -->
-          <!-- <search v-if="layout !== 'side'" :layout="layout" /> -->
-
           <!-- 全局通知 -->
           <!-- <notice /> -->
 
@@ -149,18 +145,10 @@ export default Vue.extend({
     handleNav(url) {
       this.$router.push(url);
     },
-    navToGitHub() {
-      window.open('https://github.com/Tencent/tdesign-vue-starter');
-    },
-    navToHelper() {
-      window.open('http://tdesign.tencent.com/starter/docs/get-started');
-    },
   },
 });
 </script>
-<style lang="less">
-@import '@/style/variables.less';
-
+<style lang="scss">
 .header-menu {
   flex: 1 1 1;
   display: inline-flex;

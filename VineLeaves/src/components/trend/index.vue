@@ -49,13 +49,9 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="less" scoped>
-@import '@/style/variables.less';
-
+<style lang="scss" scoped>
 .trend {
-
   &-container {
-
     &__up {
       color: var(--td-error-color);
       display: inline-flex;
