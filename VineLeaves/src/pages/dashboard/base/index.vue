@@ -4,6 +4,7 @@
     <top-panel class="row-container" />
     <!-- 中部图表  -->
     <middle-chart class="row-container" />
+    <t-loading v-if="loading" attach="row-container" :showOverlay="false" style="width: 100%" />
   </div>
 </template>
 <script>
@@ -16,9 +17,16 @@ export default {
     TopPanel,
     MiddleChart,
   },
-  mounted() {
-    this.$store.dispatch('system/getServerInfo');
-    this.$store.dispatch('system/getUserStatistic');
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  async mounted() {
+    this.loading = true;
+    await this.$store.dispatch('system/getServerInfo');
+    await this.$store.dispatch('system/getUserStatistic');
+    this.loading = false;
   },
 };
 </script>

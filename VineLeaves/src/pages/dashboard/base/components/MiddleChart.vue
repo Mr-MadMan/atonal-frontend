@@ -25,7 +25,9 @@
           }}</t-descriptions-item>
           <t-descriptions-item label="MySql">{{ serverInfo.mysql && serverInfo.mysql }}</t-descriptions-item>
           <t-descriptions-item label="Python">{{ serverInfo.python && serverInfo.python }}</t-descriptions-item>
-          <t-descriptions-item label="Jieba">{{ serverInfo.jieba && serverInfo.jieba }}</t-descriptions-item>
+          <t-descriptions-item label="Ultralytics">{{
+            serverInfo.ultralytics && serverInfo.ultralytics
+          }}</t-descriptions-item>
         </t-descriptions>
       </t-card>
     </t-col>

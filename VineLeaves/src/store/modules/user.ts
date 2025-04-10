@@ -83,7 +83,7 @@ const actions = {
 
       if (res.code === 0) {
         const currUser = res.data.user;
-        const roles = currUser.is_admin ? ['ALL_ROUTERS'] : ['UserIndex', 'Login', 'AnalysisIndex'];
+        const roles = currUser.is_admin ? ['ALL_ROUTERS'] : ['UserIndex', 'Login', 'AnalysisIndex', 'TreatmentIndex'];
         Object.assign(currUser, { roles });
         commit('setUserInfo', currUser);
         return roles;
