@@ -7,7 +7,7 @@ import othersRouters from './modules/others';
 const env = import.meta.env.MODE || 'dev';
 
 // 存放动态路由
-export const asyncRouterList = [...baseRouters, ...componentsRouters, ...othersRouters];
+export const asyncRouterList = [...othersRouters, ...baseRouters, ...componentsRouters];
 
 // 存放固定的路由
 const defaultRouterList = [
@@ -19,7 +19,7 @@ const defaultRouterList = [
   // 登录成功重定向路由
   {
     path: '/',
-    redirect: '/dashboard/base',
+    redirect: '/analysis/index',
   },
   ...asyncRouterList,
   {

@@ -45,7 +45,6 @@ export default {
         { name: '黑腐病', value: 'Black_rot' },
         { name: '霜霉病', value: 'Downey_mildew' },
         { name: '​​埃斯卡病​​', value: 'Esca' },
-        { name: '健康', value: 'Healthy' },
         { name: '枯萎病', value: 'Leaf_blight' },
       ],
       rules: {

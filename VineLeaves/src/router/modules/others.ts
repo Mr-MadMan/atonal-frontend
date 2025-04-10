@@ -1,32 +1,32 @@
+import { ViewModuleIcon } from 'tdesign-icons-vue';
 import Layout from '@/layouts/index.vue';
 
 export default [
-  {
-    path: '/user',
-    name: 'user',
-    component: Layout,
-    redirect: '/user/index',
-    meta: { title: '个人页', icon: 'user-circle' },
-    children: [
-      {
-        path: 'index',
-        name: 'UserIndex',
-        component: () => import('@/pages/user/index.vue'),
-        meta: { title: '个人中心' },
-      },
-    ],
-  },
   {
     path: '/analysis',
     name: 'Analysis',
     component: Layout,
     redirect: '/analysis/index',
-    meta: { title: '智能分析', icon: 'analysis' },
+    meta: { title: '智能分析', icon: ViewModuleIcon },
     children: [
       {
         path: 'index',
         name: 'AnalysisIndex',
         component: () => import('@/pages/analysis/index.vue'),
+      },
+    ],
+  },
+  {
+    path: '/treatment',
+    name: 'Treatment',
+    component: Layout,
+    redirect: '/treatment/index',
+    meta: { title: '治疗方案', icon: ViewModuleIcon },
+    children: [
+      {
+        path: 'index',
+        name: 'TreatmentIndex',
+        component: () => import('@/pages/treatment/index.vue'),
       },
     ],
   },

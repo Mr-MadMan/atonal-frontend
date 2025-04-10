@@ -37,7 +37,9 @@
         </t-image-viewer>
         <span v-else>-</span>
       </t-descriptions-item>
-      <t-descriptions-item label="治疗方案">{{ imageAnalysisRes.treatments.join(',') || '-' }}</t-descriptions-item>
+      <t-descriptions-item label="治疗方案">
+        <div v-html="imageAnalysisRes.treatments || '-'"></div>
+      </t-descriptions-item>
     </t-descriptions>
 
     <t-descriptions
@@ -68,17 +70,21 @@
         <video v-if="videoAnalysisRes.result_video" :src="videoAnalysisRes.result_video" controls width="300px" />
         <span v-else>-</span>
       </t-descriptions-item>
+      <t-descriptions-item label="治疗方案">
+        <div v-html="videoAnalysisRes.treatments || '-'"></div>
+      </t-descriptions-item>
     </t-descriptions>
     <t-loading v-if="loading" attach="video-result" :showOverlay="false" style="width: 100%" />
   </div>
 </template>
 <script>
 import request, { API_HOST } from '@/utils/request';
+import { mapActions } from 'vuex';
 
 const ImageAnalysisInit = {
   detections: [],
   result_image: '',
-  treatments: [],
+  treatments: '',
   using_time: 0,
 };
 
@@ -86,6 +92,7 @@ const VideoAnalysisInit = {
   result_disease: '',
   result_img: [],
   result_video: '',
+  treatments: '',
 };
 
 export default {
@@ -106,13 +113,27 @@ export default {
       videoAnalysisRes: VideoAnalysisInit,
       loading: false,
       videoImgVisible: false,
+      diseaseList: [],
     };
   },
+  mounted() {
+    this.getDiseaseList();
+  },
   methods: {
+    ...mapActions('treatment', ['getTreatmentList']),
     diseaseFormat(detections) {
       return detections
         .map((detection) => `${this.diseaseMap[detection.class]}(${Number(detection.confidence * 100).toFixed(2)}%)`)
         .join(',');
+    },
+    getDiseaseList() {
+      this.getTreatmentList({
+        page: 1,
+        pageSize: 100,
+      }).then((res) => {
+        this.diseaseList = res.data;
+        console.log(this.diseaseList.filter((item) => item.disease_name === 'leaf_blight'));
+      });
     },
     uploadMethod(file) {
       // 控制上传进度
@@ -169,6 +190,7 @@ export default {
         .then((res) => {
           this.imageAnalysisRes = res.data;
           this.imageAnalysisRes.result_image = `${API_HOST}web/static/${res.data.result_image}`;
+          this.imageAnalysisRes.treatments = res.data.treatments && this.randomPick(res.data.treatments)?.treatment;
         });
     },
     videoAnalyze(path) {
@@ -193,10 +215,16 @@ export default {
               this.videoAnalysisRes.result_img = rest.result_img
                 ? rest.result_img.split(',').map((img) => `${API_HOST}web/static/${img}`)
                 : [];
+              this.videoAnalysisRes.treatments = this.randomPick(
+                this.diseaseList.filter(
+                  (item) => item.disease_name.toLowerCase() === rest.result_disease.toLowerCase(),
+                ),
+              )?.treatment;
               this.videoAnalysisRes.result_disease = rest.result_disease
                 .split(',')
                 .map((disease) => this.diseaseMap[disease])
                 .join(',');
+
               this.videoAnalysisRes.result_video = rest.result_video
                 ? `${API_HOST}web/static/${rest.result_video}`
                 : '';
@@ -213,6 +241,10 @@ export default {
             clearInterval(interval);
           });
       }, 1000);
+    },
+    // 数组中随机选择一个
+    randomPick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
     },
   },
 };
