@@ -41,7 +41,7 @@ watch(
 <style lang="scss" scoped>
 .message-input {
   display: flex;
-  padding: 1rem;
+  padding: 0.8rem;
 }
 
 .message-input input {

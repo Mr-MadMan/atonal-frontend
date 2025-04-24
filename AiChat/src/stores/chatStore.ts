@@ -1,10 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useSessionStore } from './sessionStore'
-import type { ChatDetail, Message } from '@/services/types'
-import request from '@/services/request'
+import type { Message } from '@/services/types'
 import { chatApiService } from '@/services/api'
-// import { useChatStream } from '@/composables/useChatStream'
 
 export const useChatStore = defineStore('chat', () => {
   const sessionStore = useSessionStore()
@@ -57,25 +55,28 @@ export const useChatStore = defineStore('chat', () => {
       isStreaming: true
     }
 
+    messages.value.push(assistantResult)
+
     await chatApiService.streamChatResponse(
       { content, chat_id },
       (chunk) => {
         console.log('chunk', chunk)
-        const index = messages.value.findIndex((msg) => msg.role === 'assistant' && msg.content_type === 'think')
-        if (index !== -1) {
+        if (chunk.action === 'think') {
+          // 找到最后一条思考过程
+          const index = messages.value.findLastIndex((msg) => msg.role === 'assistant' && msg.content_type === 'think')
           messages.value[index].content += chunk.content
         }
 
         if (chunk.action === 'text') {
-          const index = messages.value.findIndex((msg) => msg.role === 'assistant' && msg.content_type === 'text')
-          if (index < 0) {
-            messages.value.push(assistantResult)
-          }
-          messages.value[index].content += chunk.content
+          const index_ = messages.value.findLastIndex((msg) => msg.role === 'assistant' && msg.content_type === 'text')
+          messages.value[index_].content += chunk.content
         }
       },
       () => {
         const index = messages.value.findIndex((msg) => msg.id === assistantMessage.id)
+        console.log('信息流结束', index)
+        sessionStore.getSessionsList()
+        sessionStore.switchSession(chat_id)
         if (index !== -1) {
           messages.value[index].isStreaming = false
         }

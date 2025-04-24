@@ -2,14 +2,23 @@
 import { ref, watchEffect } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
 import { useChatStore } from '@/stores/chatStore'
+import { useSessionStore } from '@/stores/sessionStore'
 import MessageList from './MessageList.vue'
 import MessageInput from './MessageInput.vue'
 import TypingIndicator from './TypingIndicator.vue'
 
 const chatStore = useChatStore()
+const sessionStore = useSessionStore()
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 const containerRef = ref<HTMLElement | null>(null)
+
+const handleSend = async (content: string) => {
+  if (sessionStore.currentSession.length === 0) {
+    await sessionStore.createNewSession()
+  }
+  chatStore.sendMessage(content)
+}
 
 // 滚动到底部
 watchEffect(() => {
@@ -35,11 +44,11 @@ watchEffect(() => {
     </div>
     <div ref="containerRef" class="chat-container">
       <MessageList :messages="chatStore.messages" />
-      <TypingIndicator v-if="chatStore.isLoading" />
+      <!-- <TypingIndicator v-if="chatStore.isLoading" /> -->
     </div>
 
     <div class="input-container">
-      <MessageInput :disabled="chatStore.isLoading" @send="chatStore.sendMessage" />
+      <MessageInput :disabled="chatStore.isLoading" @send="handleSend" />
     </div>
   </div>
 </template>

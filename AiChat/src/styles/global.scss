@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'variables.scss';
 
 * {
   margin: 0;
@@ -12,16 +12,21 @@ html {
 }
 
 body {
+  height: 100vh;
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   color: $dark-color;
-  // background-color: #fff;
 }
 
 #app {
-  height: 100vh;
   display: flex;
   flex-direction: column;
+  padding: 1rem;
+  max-width: 1400px;
+  min-width: 1000px;
+  height: 100vh;
+  margin: 0 auto;
 }
 
 button {
@@ -65,7 +70,6 @@ button {
   --bg-color: #fff;
   --header-bg: #F3F4F6;
   --text-color: #000;
-  // --text-color-1: ;
 }
   
 .dark {
@@ -96,4 +100,8 @@ button {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+code {
+  border-radius: $border-radius-md;
 }

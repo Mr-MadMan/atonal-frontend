@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import MessageItem from './MessageItem.vue'
 import type { ChatDetail } from '@/services/types'
 import { useAutoScroll } from '@/composables/useAutoScroll'
@@ -36,17 +36,17 @@ const visibleMessages = computed(() => {
 .message-move,
 .message-enter-active,
 .message-leave-active {
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
 .message-enter-from {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(60px);
 }
 
 .message-leave-to {
   opacity: 0;
-  transform: scale(0.9);
+  transform: translateY(0);
 }
 
 .message-leave-active {

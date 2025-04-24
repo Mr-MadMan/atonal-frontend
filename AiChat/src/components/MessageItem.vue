@@ -1,11 +1,33 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useClipboard } from '@vueuse/core'
-import type { ChatDetail } from '@/services/types'
+import type { Message } from '@/services/types'
 import { useChatStore } from '@/stores/chatStore'
+import { marked } from 'marked'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css' // 可选择其他主题
+
+// 自定义渲染markdown并高亮代码
+function renderMarkdown(content: string | any): string {
+  // 确保content是字符串
+  if (typeof content !== 'string') {
+    console.warn('renderMarkdown收到非字符串值:', content)
+    return String(content || '') // 尝试转换为字符串或返回空字符串
+  }
+
+  // 使用正则表达式处理代码块
+  const processedContent = content.replace(/```(\w+)?\n([\s\S]+?)```/g, (match, lang, code) => {
+    const language = lang && hljs.getLanguage(lang) ? lang : 'plaintext'
+    const highlightedCode = hljs.highlight(code, { language }).value
+    return `<pre><code class="hljs language-${language}">${highlightedCode}</code></pre>`
+  })
+
+  // 使用marked处理剩余的Markdown，并断言为string类型
+  return marked(processedContent) as string
+}
 
 const props = defineProps<{
-  message: ChatDetail
+  message: Message
 }>()
 
 const { copy, isSupported } = useClipboard()
@@ -14,7 +36,7 @@ const chataStore = useChatStore()
 const messageClass = computed(() => ({
   'message-item': true,
   [`role-${props.message.role}`]: true,
-  // 'is-streaming': props.message.is_title,
+  'is-streaming': props.message.isStreaming,
   'has-error': props.message.content.includes('[Error]')
 }))
 
@@ -43,7 +65,15 @@ const handleCopy = () => {
       </template>
       <pre v-else-if="message.content_type === 'think'">{{ message.content }}</pre>
       <template v-else>
-        {{ message.content }}
+        <!-- <div v-html="renderMarkdown(message.content)"></div> -->
+        <div
+          class="answer-content"
+          v-html="
+            message.content && typeof message.content === 'string'
+              ? renderMarkdown(message.content)
+              : String(message.content || '')
+          "
+        ></div>
       </template>
     </div>
   </div>
@@ -123,6 +153,7 @@ const handleCopy = () => {
   transition: opacity 0.2s ease;
   font-size: 0.9rem;
   padding: $spacing-xs;
+  color: var(--text-color);
 
   &:hover {
     opacity: 1;
@@ -135,8 +166,6 @@ const handleCopy = () => {
   line-height: 1.5;
 
   pre {
-    // max-height: 400px;
-    // overflow-y: auto;
     margin: 0;
     white-space: pre-wrap;
     font-family: inherit;
