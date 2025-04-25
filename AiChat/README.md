@@ -1,15 +1,3 @@
-### Usage
-
-> Initialize project with our CLI tool `tdesign-starter-cli`
-
-```bash
-## install tdesign-starter-cli
-npm i tdesign-starter-cli@latest -g
-
-## create project
-td-starter init
-```
-
 ### Develop
 
 ```bash

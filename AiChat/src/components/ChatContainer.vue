@@ -5,7 +5,6 @@ import { useChatStore } from '@/stores/chatStore'
 import { useSessionStore } from '@/stores/sessionStore'
 import MessageList from './MessageList.vue'
 import MessageInput from './MessageInput.vue'
-import TypingIndicator from './TypingIndicator.vue'
 
 const chatStore = useChatStore()
 const sessionStore = useSessionStore()
@@ -29,6 +28,22 @@ watchEffect(() => {
     })
   }
 })
+
+// 监听主题变化
+watch(
+  isDark,
+  (newVal) => {
+    const hljsTheme = document.getElementById('hljs-theme')
+    if (newVal) {
+      hljsTheme?.setAttribute('href', 'public/highlight-dark.css')
+    } else {
+      hljsTheme?.setAttribute('href', 'public/highlight-light.css')
+    }
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <template>
@@ -44,7 +59,6 @@ watchEffect(() => {
     </div>
     <div ref="containerRef" class="chat-container">
       <MessageList :messages="chatStore.messages" />
-      <!-- <TypingIndicator v-if="chatStore.isLoading" /> -->
     </div>
 
     <div class="input-container">

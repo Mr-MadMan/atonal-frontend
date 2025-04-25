@@ -3,9 +3,9 @@ import { computed } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import type { Message } from '@/services/types'
 import { useChatStore } from '@/stores/chatStore'
+import IconCopy from './IconCopy.vue'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css' // 可选择其他主题
 
 // 自定义渲染markdown并高亮代码
 function renderMarkdown(content: string | any): string {
@@ -30,7 +30,7 @@ const props = defineProps<{
   message: Message
 }>()
 
-const { copy, isSupported } = useClipboard()
+const { copy, isSupported, copied } = useClipboard({ legacy: true })
 const chataStore = useChatStore()
 
 const messageClass = computed(() => ({
@@ -54,7 +54,7 @@ const handleCopy = () => {
         {{ message.role === 'user' ? '你' : message.content_type === 'think' ? '思考过程' : 'AI回答' }}
       </span>
       <button v-if="isSupported && message.content" class="copy-button" title="Copy to clipboard" @click="handleCopy">
-        ⎘
+        {{ copied ? '√' : `⎘ 复制` }}
       </button>
     </div>
     <div class="message-content">
@@ -65,7 +65,6 @@ const handleCopy = () => {
       </template>
       <pre v-else-if="message.content_type === 'think'">{{ message.content }}</pre>
       <template v-else>
-        <!-- <div v-html="renderMarkdown(message.content)"></div> -->
         <div
           class="answer-content"
           v-html="
@@ -150,7 +149,7 @@ const handleCopy = () => {
   border: none;
   cursor: pointer;
   opacity: 0.5;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
   font-size: 0.9rem;
   padding: $spacing-xs;
   color: var(--text-color);

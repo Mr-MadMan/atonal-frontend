@@ -8,6 +8,9 @@ export const useSessionStore = defineStore('session', () => {
   const currentSessionId = ref<string | null>(null)
   const isFocus = ref(false)
   const currentSession = ref<ChatDetail[] | null>(null)
+  const currentPage = ref(1)
+  const pageSize = ref(15)
+  const total = ref(0)
 
   // 创建新会话
   const createNewSession = async () => {
@@ -27,7 +30,7 @@ export const useSessionStore = defineStore('session', () => {
     currentSession.value = res.details
   }
 
-  // 删除会话
+  // 删除会话currentSession
   const deleteSession = async (chat_id: string) => {
     await request.delete<any, { chat_id: string }>(`/api/sillconflow/detail/${chat_id}`)
     sessionsList.value = sessionsList.value.filter((s) => s.chat_id !== chat_id)
@@ -45,16 +48,24 @@ export const useSessionStore = defineStore('session', () => {
   }
 
   // 获取会话列表
-  const getSessionsList = async () => {
-    const res = await request.get<any, ChatHistory>('/api/sillconflow/history', {
-      params: {
-        page: 1,
-        pageSize: 100
-      }
-    })
-    sessionsList.value = []
-    sessionsList.value = sessionsList.value.concat(res.historys.data)
-    console.log('sessionsList list', sessionsList.value)
+  const getSessionsList = (page = 1) => {
+    return request
+      .get<any, ChatHistory>('/api/sillconflow/history', {
+        params: {
+          page,
+          row: pageSize.value
+        }
+      })
+      .then((res) => {
+        if (page === 1) {
+          sessionsList.value = []
+          currentPage.value = 1
+        }
+        currentPage.value = page
+        total.value = res.historys.total
+        sessionsList.value = sessionsList.value.concat(res.historys.data)
+        console.log('sessionsList list', sessionsList.value)
+      })
   }
 
   return {
@@ -62,6 +73,9 @@ export const useSessionStore = defineStore('session', () => {
     sessionsList,
     currentSessionId,
     currentSession,
+    currentPage,
+    pageSize,
+    total,
     createNewSession,
     switchSession,
     deleteSession,

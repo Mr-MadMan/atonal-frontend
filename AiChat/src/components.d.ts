@@ -8,6 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ChatContainer: typeof import('./components/ChatContainer.vue')['default']
+    CopyIcon: typeof import('./components/CopyIcon.vue')['default']
+    IconCopy: typeof import('./components/IconCopy.vue')['default']
     MessageInput: typeof import('./components/MessageInput.vue')['default']
     MessageItem: typeof import('./components/MessageItem.vue')['default']
     MessageList: typeof import('./components/MessageList.vue')['default']

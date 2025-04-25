@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useSessionStore } from '@/stores/sessionStore'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const sessionStore = useSessionStore()
+const sessionListRef = ref<HTMLElement | null>(null)
+const isLoading = ref(false)
 
 onMounted(() => {
   sessionStore.getSessionsList()
@@ -15,6 +17,32 @@ const handleCreateNew = () => {
 const formatDate = (date: number) => {
   return new Date(date).toLocaleDateString() + ' ' + new Date(date).toLocaleTimeString().slice(0, 5)
 }
+
+// 是否还有更多消息可加载
+const hasMore = computed(() => {
+  return sessionStore.currentPage * sessionStore.pageSize < sessionStore.total
+})
+
+// 监听滚动事件，实现下拉加载更多
+const handleScroll = (event: Event) => {
+  const target = event.target as HTMLElement
+  const scrollTop = target.scrollTop
+  const scrollHeight = target.scrollHeight
+  const clientHeight = target.clientHeight
+
+  // 当滚动到距离底部100px时，加载更多数据
+  if (scrollHeight - scrollTop - clientHeight < 100 && hasMore.value && !isLoading.value) {
+    loadMoreSessions()
+  }
+}
+
+// 加载更多会话
+const loadMoreSessions = () => {
+  isLoading.value = true
+  sessionStore.getSessionsList(sessionStore.currentPage + 1).finally(() => {
+    isLoading.value = false
+  })
+}
 </script>
 
 <template>
@@ -24,9 +52,8 @@ const formatDate = (date: number) => {
         <span>+ 新对话</span>
       </button>
     </div>
-
     <!-- 下拉刷新列表 -->
-    <div class="session-list">
+    <div ref="sessionListRef" class="session-list" @scroll="handleScroll">
       <div
         v-for="session in sessionStore.sessionsList"
         :key="session.id"
@@ -44,6 +71,7 @@ const formatDate = (date: number) => {
         </div>
         <button class="delete-btn" title="删除会话" @click.stop="sessionStore.deleteSession(session.chat_id)">×</button>
       </div>
+      <div v-if="isLoading" class="loading-indicator">加载中...</div>
     </div>
   </div>
 </template>
@@ -81,7 +109,9 @@ const formatDate = (date: number) => {
 }
 
 .session-list {
-  flex: 1;
+  // flex: 1;
+  // height: calc(100% - 200px);
+  height: 100%;
   overflow-y: auto;
   padding: $spacing-sm;
 }
@@ -142,5 +172,13 @@ const formatDate = (date: number) => {
   // &:hover {
   //   color: var(--danger-hover);
   // }
+}
+
+.loading-indicator,
+.end-message {
+  text-align: center;
+  padding: $spacing-sm;
+  color: var(--text-color-secondary);
+  font-size: 0.85rem;
 }
 </style>

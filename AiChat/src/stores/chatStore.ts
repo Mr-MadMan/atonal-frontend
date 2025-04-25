@@ -75,7 +75,7 @@ export const useChatStore = defineStore('chat', () => {
       () => {
         const index = messages.value.findIndex((msg) => msg.id === assistantMessage.id)
         console.log('信息流结束', index)
-        sessionStore.getSessionsList()
+        sessionStore.getSessionsList(sessionStore.currentPage)
         sessionStore.switchSession(chat_id)
         if (index !== -1) {
           messages.value[index].isStreaming = false
