@@ -35,9 +35,9 @@ watch(
   (newVal) => {
     const hljsTheme = document.getElementById('hljs-theme')
     if (newVal) {
-      hljsTheme?.setAttribute('href', 'public/highlight-dark.css')
+      hljsTheme?.setAttribute('href', 'highlight-dark.css')
     } else {
-      hljsTheme?.setAttribute('href', 'public/highlight-light.css')
+      hljsTheme?.setAttribute('href', 'highlight-light.css')
     }
   },
   {

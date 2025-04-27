@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import MessageItem from './MessageItem.vue'
 import type { ChatDetail } from '@/services/types'
 import { useAutoScroll } from '@/composables/useAutoScroll'
@@ -10,15 +9,12 @@ const props = defineProps<{
 const containerRef = useAutoScroll([props.messages])
 
 // 添加分页加载功能
-const visibleMessages = computed(() => {
-  return props.messages.slice(-50) // 只显示最近50条消息
-})
 </script>
 
 <template>
   <div ref="containerRef" class="message-list">
     <TransitionGroup name="message" tag="div">
-      <MessageItem v-for="message in visibleMessages" :key="message.id" :message="message" />
+      <MessageItem v-for="message in props.messages" :key="message.id" :message="message" />
     </TransitionGroup>
   </div>
 </template>
