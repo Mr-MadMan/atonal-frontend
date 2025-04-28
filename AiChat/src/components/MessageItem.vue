@@ -2,8 +2,6 @@
 import { computed } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import type { Message } from '@/services/types'
-import { useChatStore } from '@/stores/chatStore'
-import IconCopy from './IconCopy.vue'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 
@@ -31,7 +29,6 @@ const props = defineProps<{
 }>()
 
 const { copy, isSupported, copied } = useClipboard({ legacy: true })
-const chataStore = useChatStore()
 
 const messageClass = computed(() => ({
   'message-item': true,

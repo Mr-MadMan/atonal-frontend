@@ -13,10 +13,10 @@ const toggleDark = useToggle(isDark)
 const containerRef = ref<HTMLElement | null>(null)
 
 const handleSend = async (content: string) => {
-  if (sessionStore.currentSession.length === 0) {
+  if (!sessionStore.currentSessionId) {
     await sessionStore.createNewSession()
   }
-  chatStore.sendMessage(content)
+  sessionStore.currentSessionId && chatStore.sendMessage(content)
 }
 
 // 滚动到底部

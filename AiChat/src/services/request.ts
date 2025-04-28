@@ -2,7 +2,7 @@ import axios from 'axios'
 import proxy from '../config/host'
 import { TOKEN_NAME } from '@/config/global'
 
-const env = import.meta.env.MODE || 'dev'
+const env = import.meta.env.MODE
 
 console.log('env', env)
 
