@@ -7,7 +7,7 @@
             <t-input v-model="pagination.stream_title" placeholder="请输入视频流名称" clearable />
           </t-form-item>
           <t-button theme="primary" type="submit">查询</t-button>
-          <t-button theme="primary" @click="handleCreate" style="margin-left: 10px"> 新增 </t-button>
+          <t-button theme="primary" @click="handleCreate" style="margin-left: 10px" v-if="current_user_role === 'admin'"> 新增 </t-button>
         </t-form>
 
         <t-card
@@ -18,7 +18,7 @@
           hover-shadow
           @click.stop.native="handleDetail(item)"
         >
-          <template #actions>
+          <template v-if="current_user_role === 'admin'" #actions>
             <t-button theme="primary" variant="text" @click.stop="handleEdit(item, false)">编辑</t-button>
             <t-button theme="danger" variant="text" @click.stop="handleDelete(item)">删除</t-button>
           </template>
