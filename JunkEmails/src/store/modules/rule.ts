@@ -38,13 +38,13 @@ const actions = {
       throw new Error(error);
     }
   },
-  // 编辑用户
+  // 编辑规则
   async editRule({ state }, ruleInfo: any) {
     const ruleInfo_ = {
       ...ruleInfo,
     };
     try {
-      const res = await request.post<any, commonResponse>(`/api/rule/${ruleInfo.rule_id}`, ruleInfo_);
+      const res = await request.post<any, commonResponse>(`/api/rule/${ruleInfo.id}`, ruleInfo_);
       if (res.code === 0) {
         return res.data;
       }

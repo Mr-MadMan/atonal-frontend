@@ -40,7 +40,7 @@ const createRouter = () =>
       例如你的应用部署在 https://example.com/my-app/
       可以设置 base: '/my-app/'
     */
-    base: env === 'prod' ? '/junk-emails/' : null,
+    base: env === 'prod' ? '/web/' : null,
     routes: defaultRouterList,
     scrollBehavior() {
       return { x: 0, y: 0 };
