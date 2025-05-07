@@ -7,7 +7,14 @@
             <t-input v-model="pagination.stream_title" placeholder="请输入视频流名称" clearable />
           </t-form-item>
           <t-button theme="primary" type="submit">查询</t-button>
-          <t-button theme="primary" @click="handleCreate" style="margin-left: 10px" v-if="current_user_role === 'admin'"> 新增 </t-button>
+          <t-button
+            theme="primary"
+            @click="handleCreate"
+            style="margin-left: 10px"
+            v-if="current_user_role === 'admin'"
+          >
+            新增
+          </t-button>
         </t-form>
 
         <t-card
@@ -26,7 +33,17 @@
       </div>
       <t-divider style="height: 100%" layout="vertical" />
       <div style="flex: 1; min-width: 600px">
-        <video id="livePlayer"></video>
+        <easy-player
+          ref="easyPlayerRef"
+          :video-url="currentVideo.flv"
+          decode-type="soft"
+          muted
+          reconnection
+          :has-audio="false"
+          autoplay
+          style="width: 100%"
+          @error="onPlayerError"
+        />
       </div>
     </t-card>
 
@@ -58,7 +75,7 @@
 
 <script>
 import { api_video_list, api_video_add, api_video_delete, api_video_detail, api_video_update } from '@/api/alarm.js';
-import Hls from 'hls.js';
+import EasyPlayer from '@easydarwin/easyplayer';
 
 const paginationOrigin = {
   page: 1,
@@ -68,7 +85,9 @@ const paginationOrigin = {
 };
 
 export default {
-  components: {},
+  components: {
+    EasyPlayer,
+  },
   data() {
     return {
       listData: [],
@@ -108,18 +127,11 @@ export default {
   },
   beforeDestroy() {
     this.currentVideo.hls = '';
-    this.hlsIns.destroy();
+    this.currentVideo.flv = '';
   },
   methods: {
-    initPlayer() {
-      if (Hls.isSupported()) {
-        this.hlsIns = new Hls();
-        this.hlsIns.loadSource(this.currentVideo.hls);
-        this.hlsIns.attachMedia(document.getElementById('livePlayer'));
-        this.hlsIns.on(Hls.Events.MANIFEST_PARSED, () => {
-          document.getElementById('livePlayer').play();
-        });
-      }
+    onPlayerError(e) {
+      console.log('onPlayerError', e);
     },
     async fetchVideoList() {
       this.loading = true;
@@ -151,7 +163,7 @@ export default {
         const res = await api_video_detail(this.currentVideoId);
         if (res.code === 0 || res.code === 200) {
           this.currentVideo.hls = res.data.streams['http-hls'];
-          this.initPlayer();
+          this.currentVideo.flv = res.data.streams['http-flv'];
         }
       }
     },

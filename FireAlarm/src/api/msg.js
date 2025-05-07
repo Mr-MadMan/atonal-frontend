@@ -42,3 +42,12 @@ export function api_event_modify(event_id, data) {
     data,
   });
 }
+
+// 全部消息已读
+export function api_msg_all_read() {
+  return request({
+    url: '/api/msg/all',
+    method: 'put',
+  });
+}
+

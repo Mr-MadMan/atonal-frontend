@@ -1,5 +1,5 @@
 <template>
-  <div class="msg-container">
+  <div class="events-container">
     <t-card>
       <t-table
         row-key="id"
@@ -131,7 +131,7 @@ export default {
 </script>
 
 <style scoped>
-.msg-container {
+.events-container {
   padding: 20px;
 }
 
@@ -141,53 +141,11 @@ export default {
   gap: 8px;
 }
 
-.content-cell {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 300px;
-}
-
 .unread-dot {
   width: 8px;
   height: 8px;
   background-color: #e34d59;
   border-radius: 50%;
   display: inline-block;
-}
-
-.message-content {
-  padding: 16px;
-}
-
-.message-time {
-  color: #999;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.message-body {
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
-/* 自定义滚动条样式 */
-:deep(.t-card__body) {
-  overflow-y: auto;
-  max-height: calc(100vh - 180px);
-}
-
-:deep(.t-card__body::-webkit-scrollbar) {
-  width: 6px;
-  height: 6px;
-}
-
-:deep(.t-card__body::-webkit-scrollbar-thumb) {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-
-:deep(.t-card__body::-webkit-scrollbar-track) {
-  background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

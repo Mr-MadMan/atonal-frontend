@@ -3,13 +3,14 @@
     class="popup-event-detail"
     :header="eventDetail.video_stream.name"
     :visible="dialogVisible"
+    placement="center"
     :footer="false"
     width="650px"
     @close="dialogVisible = false"
   >
     <div class="message-content">
       <div>
-        警报类型：<span style="color: #000; font-weight: 500">{{
+        警报类型：<span style="font-weight: 700">{{
           eventDetail.result_label === 'smoke' ? '烟雾报警' : '火焰报警'
         }}</span>
       </div>
@@ -17,6 +18,8 @@
       <img :src="eventDetail.result_frame_path" alt="" />
       <p>视频截取</p>
       <video v-if="eventDetail.result_video_path" :src="eventDetail.result_video_path" controls></video>
+      <p>视频检验描述</p>
+      <t-textarea v-model="eventDetail.status_description" placeholder="请输入视频检验描述" />
       <div style="text-align: right; margin-top: 10px">
         <t-button theme="primary" @click="handleModifyEvent(1)">通过</t-button>
         <t-button theme="danger" @click="handleModifyEvent(-1)" style="margin-left: 10px">驳回</t-button>
@@ -47,6 +50,7 @@ export default {
         result_label: '',
         result_status: '',
         create_time: '',
+        status_description: '',
       },
     };
   },
@@ -69,6 +73,7 @@ export default {
     handleModifyEvent(status) {
       api_event_modify(this.eventId, {
         status,
+        description: this.eventDetail.status_description,
       })
         .then((res) => {
           if (res.code === 0) {
@@ -85,11 +90,19 @@ export default {
 };
 </script>
 
-<style scoped>
-.popup-event-detail {
+<style lang="less" scoped>
+.message-content {
   img,
   video {
     width: 100%;
+  }
+
+  p,
+  div {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 5px;
   }
 }
 </style>

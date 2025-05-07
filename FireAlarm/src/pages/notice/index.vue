@@ -1,23 +1,6 @@
 <template>
-  <div class="account-container">
+  <div class="msg-container">
     <t-card>
-      <div class="operation-container">
-        <t-form layout="inline" @submit="handleSearch">
-          <t-form-item label="姓名">
-            <t-input v-model="searchParams.realname" placeholder="请输入姓名" clearable />
-          </t-form-item>
-          <t-form-item label="电话">
-            <t-input v-model="searchParams.telphone" placeholder="请输入电话" clearable />
-          </t-form-item>
-          <t-form-item>
-            <t-button theme="primary" type="submit">查询</t-button>
-            <t-button style="margin-left: 16px" variant="outline" @click="handleReset"
-              >重置</t-button
-            >
-          </t-form-item>
-        </t-form>
-      </div>
-
       <t-table
         row-key="id"
         :data="tableData"
@@ -25,75 +8,81 @@
         :loading="loading"
         :pagination="pagination"
         @page-change="onPageChange"
+        hover
       >
-        <template #role="{ row }">
-          {{ roleMap[row.role] || row.role }}
+        <template #type="{ row }">
+          <div class="title-cell">
+            <span v-if="!row.status" class="unread-dot"></span>
+            <span>{{ row.type }}</span>
+          </div>
         </template>
-        <template #operation="{ row }">
-          <t-link theme="primary" hover="color" @click="handleEdit(row)">
-            <t-icon name="edit" /> 编辑
-          </t-link>
+        <template #content="{ row }">
+          <div class="content-cell">{{ row.content }}</div>
+        </template>
+        <template #create_time="{ row }">
+          {{ formatTime(row.create_time) }}
+        </template>
+        <template #status="{ row }">
+          <t-tag :theme="row.status ? 'default' : 'primary'" :variant="row.status ? 'light' : 'dark'">
+            {{ row.status ? '已读' : '未读' }}
+          </t-tag>
+        </template>
+        <template #op="{ row }">
+          <t-button theme="primary" variant="text" @click="handleView(row)"> 查看 </t-button>
         </template>
       </t-table>
     </t-card>
 
-    <UserInfo
-      v-if="currentUser"
-      :user_id="currentUser"
-      :edit="true"
-      :visible="showUserInfo"
-      @success="handleUserInfoSuccess"
-      @close="handleUserInfoCancel"
-    />
+    <!-- 消息详情弹窗 -->
+    <t-dialog
+      :visible="dialogVisible"
+      :header="currentMsg.type"
+      :footer="false"
+      width="500px"
+      @close="dialogVisible = false"
+    >
+      <div class="message-content">
+        <div class="message-time">{{ formatTime(currentMsg.create_time) }}</div>
+        <div class="message-body">{{ currentMsg.content }}</div>
+      </div>
+    </t-dialog>
   </div>
 </template>
 
 <script>
-import { api_link } from "@/api/link.js";
-import dayjs from "dayjs";
-import UserInfo from "../account/components/user_info.vue";
+import { api_msg_query, api_msg_set_read } from '@/api/msg.js';
+import dayjs from 'dayjs';
 
 export default {
-  name: "Account",
-  components: {
-    UserInfo,
-  },
-
   data() {
     return {
-      showUserInfo: false,
-      currentUser: null,
-      roleMap: {
-        user: "病人",
-        doctor: "医生",
-        nurse: "护士",
-        admin: "院长",
-      },
-      roleOptions: [
-        { value: "user", label: "病人" },
-        { value: "doctor", label: "医生" },
-        { value: "nurse", label: "护士" },
-        { value: "admin", label: "院长" },
-      ],
-      searchParams: {
-        realname: "",
-        telphone: "",
-      },
       columns: [
-        { colKey: "id", title: "ID", width: 200 },
-        { colKey: "username", title: "用户名", width: 150 },
-        { colKey: "realname", title: "姓名", width: 150 },
-        { colKey: "telphone", title: "电话", width: 150 },
-        { colKey: "role", title: "角色", width: 100 },
         {
-          colKey: "create_time",
-          title: "创建时间",
-          width: 180,
-          cell: (h, { row }) => {
-            return dayjs(row.create_time * 1000).format("YYYY-MM-DD HH:mm:ss");
-          },
+          colKey: 'type',
+          title: '标题',
+          width: 200,
         },
-        { colKey: "operation", title: "操作", width: 150 },
+        {
+          colKey: 'content',
+          title: '内容',
+          width: 300,
+        },
+        {
+          colKey: 'create_time',
+          title: '时间',
+          width: 180,
+        },
+        {
+          colKey: 'status',
+          title: '状态',
+          width: 100,
+        },
+        {
+          colKey: 'op',
+          title: '操作',
+          width: 100,
+          align: 'center',
+        },
       ],
       tableData: [],
       loading: false,
@@ -102,25 +91,29 @@ export default {
         pageSize: 10,
         total: 0,
       },
+      dialogVisible: false,
+      currentMsg: {},
     };
   },
   mounted() {
-    this.fetchAccountList();
+    this.fetchMsgList();
   },
   methods: {
-    async fetchAccountList() {
+    formatTime(timestamp) {
+      return dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss');
+    },
+    async fetchMsgList() {
       this.loading = true;
       try {
-        const params = {
-          ...this.searchParams,
+        const res = await api_msg_query({
           page: this.pagination.current,
           row: this.pagination.pageSize,
-        };
-        const res = await api_link(params);
+        });
+        this.tableData = res.data.data;
         this.pagination.total = res.data.total;
         this.pagination.current = res.data.page;
-        this.tableData = res.data.data;
       } catch (error) {
+        this.$message.error('获取消息列表失败');
         console.error(error);
       } finally {
         this.loading = false;
@@ -129,40 +122,92 @@ export default {
     onPageChange(pageInfo) {
       this.pagination.current = pageInfo.current;
       this.pagination.pageSize = pageInfo.pageSize;
-      this.fetchAccountList();
+      this.fetchMsgList();
     },
-    handleSearch() {
-      this.pagination.current = 1;
-      this.fetchAccountList();
-    },
-    handleReset() {
-      this.searchParams = {
-        realname: "",
-        telphone: "",
-      };
-      this.pagination.current = 1;
-      this.fetchAccountList();
-    },
-    handleEdit(row) {
-      this.currentUser = row.id;
-      this.showUserInfo = true;
-    },
-    handleUserInfoSuccess() {
-      this.showUserInfo = false;
-      this.fetchAccountList();
-    },
-    handleUserInfoCancel() {
-      this.showUserInfo = false;
+    async handleView(row) {
+      this.currentMsg = row;
+      this.dialogVisible = true;
+
+      if (!row.status) {
+        try {
+          await api_msg_set_read(row.id);
+          // 更新本地数据状态
+          const index = this.tableData.findIndex((item) => item.id === row.id);
+          if (index !== -1) {
+            this.tableData[index].status = true;
+            // 强制更新视图
+            this.tableData = [...this.tableData];
+          }
+          const res = await api_msg_query({ page: 1, row: 1000, status: -1 });
+          this.$store.commit('notification/setMsgData', res.data.data);
+        } catch (error) {
+          this.$message.error('设置已读状态失败');
+          console.error(error);
+        }
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-.account-container {
+.msg-container {
   padding: 20px;
 }
-.operation-container {
-  margin-bottom: 20px;
+
+.title-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.content-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #e34d59;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.message-content {
+  padding: 16px;
+}
+
+.message-time {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.message-body {
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* 自定义滚动条样式 */
+:deep(.t-card__body) {
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
+
+:deep(.t-card__body::-webkit-scrollbar) {
+  width: 6px;
+  height: 6px;
+}
+
+:deep(.t-card__body::-webkit-scrollbar-thumb) {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+:deep(.t-card__body::-webkit-scrollbar-track) {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

@@ -9,12 +9,7 @@
           style="width: 300px"
           @change="handleFilterChange"
         >
-          <t-option
-            v-for="item in userOptions"
-            :key="item.id"
-            :value="item.id"
-            :label="item.realname"
-          />
+          <t-option v-for="item in userOptions" :key="item.id" :value="item.id" :label="item.realname" />
         </t-select>
         <t-button theme="primary" @click="handleCreate" :disabled="!filter.user_id">
           <template #icon><t-icon name="add" /></template>
@@ -49,9 +44,7 @@
               @confirm="handleDelete(row)"
               v-if="row.edit_user_id == current_user_id || current_user_role == 'admin'"
             >
-              <t-link theme="danger" hover="color">
-                <t-icon name="delete" /> 删除
-              </t-link>
+              <t-link theme="danger" hover="color"> <t-icon name="delete" /> 删除 </t-link>
             </t-popconfirm>
           </t-space>
         </template>
@@ -67,13 +60,7 @@
       top="80px"
       :on-close="handleDialogClose"
     >
-      <t-form
-        ref="form"
-        :data="formData"
-        :rules="formRules"
-        label-align="left"
-        @submit="handleDialogSubmit"
-      >
+      <t-form ref="form" :data="formData" :rules="formRules" label-align="left" @submit="handleDialogSubmit">
         <t-form-item label="病历标题" name="case_title">
           <t-input v-model="formData.case_title" placeholder="请输入病历标题" />
         </t-form-item>
@@ -89,12 +76,7 @@
           <upload-component v-model="formData.case_files" @change="handleFileChange" />
         </t-form-item>
         <div style="margin-top: 16px; text-align: right">
-          <t-button
-            variant="outline"
-            @click="handleDialogClose"
-            style="margin-right: 16px"
-            >取消</t-button
-          >
+          <t-button variant="outline" @click="handleDialogClose" style="margin-right: 16px">取消</t-button>
           <t-button type="submit" theme="primary">提交</t-button>
         </div>
       </t-form>
@@ -113,11 +95,11 @@
 </template>
 
 <script>
-import { api_case_create, api_case_list, api_case_delete } from "@/api/case.js";
-import UploadComponent from "@/components/upload/index.vue";
-import CaseEdit from "@/pages/case/components/case_edit.vue";
-import dayjs from "dayjs";
-import { api_link } from "@/api/link.js";
+import { api_case_create, api_case_list, api_case_delete } from '@/api/case.js';
+import UploadComponent from '@/components/upload/index.vue';
+import CaseEdit from '@/pages/case/components/case_edit.vue';
+import dayjs from 'dayjs';
+import { api_link } from '@/api/link.js';
 
 export default {
   components: {
@@ -131,32 +113,30 @@ export default {
       },
       userOptions: [],
       columns: [
-        { colKey: "id", title: "ID", width: 200 },
-        { colKey: "case_title", title: "病历标题", width: 180 },
-        { colKey: "edit_info.realname", title: "撰写人", width: 150 },
+        { colKey: 'id', title: 'ID', width: 200 },
+        { colKey: 'case_title', title: '病历标题', width: 180 },
+        { colKey: 'edit_info.realname', title: '撰写人', width: 150 },
         {
-          colKey: "edit_role",
-          title: "撰写人身份",
+          colKey: 'edit_role',
+          title: '撰写人身份',
           width: 100,
           cell: (h, { row }) => {
             const roleMap = {
-              user: "病人",
-              doctor: "医生",
-              nurse: "护士",
-              admin: "院长",
+              user: '病人',
+              doctor: '医生',
+              nurse: '护士',
+              admin: '院长',
             };
             return roleMap[row.edit_role] || row.edit_role;
           },
         },
         {
-          colKey: "create_time",
-          title: "记录日期",
+          colKey: 'create_time',
+          title: '记录日期',
           width: 250,
-          cell: (h, { row }) => {
-            return dayjs(row.create_time * 1000).format("YYYY-MM-DD HH:mm:ss");
-          },
+          cell: (h, { row }) => dayjs(row.create_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
         },
-        { colKey: "operation", title: "操作", width: 150 },
+        { colKey: 'operation', title: '操作', width: 150 },
       ],
       tableData: [],
       loading: false,
@@ -170,34 +150,34 @@ export default {
       currentCaseId: null,
       currentReadonly: false,
       formData: {
-        case_title: "",
-        case_content: "",
+        case_title: '',
+        case_content: '',
         case_files: [],
       },
       formRules: {
         case_title: [
-          { required: true, message: "请填写病历标题", type: "error" },
-          { max: 50, message: "标题长度不能超过50个字符", type: "warning" },
+          { required: true, message: '请填写病历标题', type: 'error' },
+          { max: 50, message: '标题长度不能超过50个字符', type: 'warning' },
         ],
-        "edit_info.realname": [
-          { required: true, message: "请填写撰写人姓名", type: "error" },
-          { max: 20, message: "姓名长度不能超过20个字符", type: "warning" },
+        'edit_info.realname': [
+          { required: true, message: '请填写撰写人姓名', type: 'error' },
+          { max: 20, message: '姓名长度不能超过20个字符', type: 'warning' },
         ],
-        edit_role: [{ required: true, message: "请选择撰写人身份", type: "error" }],
+        edit_role: [{ required: true, message: '请选择撰写人身份', type: 'error' }],
         case_content: [
-          { required: true, message: "请填写病历内容", type: "error" },
-          { max: 1000, message: "内容长度不能超过1000个字符", type: "warning" },
+          { required: true, message: '请填写病历内容', type: 'error' },
+          { max: 1000, message: '内容长度不能超过1000个字符', type: 'warning' },
         ],
       },
       uploadedFiles: [],
-      current_user_id: "",
-      current_user_role: "",
+      current_user_id: '',
+      current_user_role: '',
     };
   },
   mounted() {
     this.fetchUserOptions();
-    this.current_user_id = this.$store.getters["user/userInfo"]["user_id"];
-    this.current_user_role = this.$store.getters["user/role"];
+    this.current_user_id = this.$store.getters['user/userInfo'].user_id;
+    this.current_user_role = this.$store.getters['user/role'];
   },
   methods: {
     async fetchUserOptions() {
@@ -210,11 +190,11 @@ export default {
     },
     async fetchCaseList() {
       if (!this.filter.user_id) {
-        this.$message.warning("请先选择病人");
+        this.$message.warning('请先选择病人');
         return;
       }
       this.loading = true;
-      let res = await api_case_list({
+      const res = await api_case_list({
         page: this.pagination.current,
         row: this.pagination.pageSize,
         user_id: this.filter.user_id,
@@ -231,11 +211,11 @@ export default {
     },
     handleCreate() {
       this.formData = {
-        case_title: "",
-        case_content: "",
+        case_title: '',
+        case_content: '',
         case_files: [],
-        edit_info: { realname: "" },
-        edit_role: "user",
+        edit_info: { realname: '' },
+        edit_role: 'user',
       };
       this.uploadedFiles = [];
       this.dialogVisible = true;
@@ -254,11 +234,11 @@ export default {
     },
     async handleDelete(row) {
       try {
-        let res = await api_case_delete(row.case_id);
-        this.$message.success("删除成功");
+        const res = await api_case_delete(row.case_id);
+        this.$message.success('删除成功');
         this.fetchCaseList();
       } catch (error) {
-        this.$message.error("删除失败");
+        this.$message.error('删除失败');
       }
     },
     handleDialogClose() {
@@ -279,14 +259,14 @@ export default {
           };
           const res = await api_case_create(payload);
           if (res.code === 0) {
-            this.$message.success("新增成功");
+            this.$message.success('新增成功');
             this.dialogVisible = false;
             this.fetchCaseList();
           } else {
             this.$message.error(res.msg);
           }
         } catch (error) {
-          this.$message.error("新增失败");
+          this.$message.error('新增失败');
         }
       }
     },
@@ -300,25 +280,5 @@ export default {
 }
 .operation-container {
   margin-bottom: 20px;
-}
-
-/* 自定义滚动条样式 */
-:deep(.t-dialog__body) {
-  overflow-y: auto;
-  max-height: calc(80vh - 120px);
-}
-
-:deep(.t-dialog__body::-webkit-scrollbar) {
-  width: 6px;
-  height: 6px;
-}
-
-:deep(.t-dialog__body::-webkit-scrollbar-thumb) {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-
-:deep(.t-dialog__body::-webkit-scrollbar-track) {
-  background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

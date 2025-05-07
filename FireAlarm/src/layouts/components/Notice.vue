@@ -56,7 +56,7 @@
 import Vue from 'vue';
 import { mapState, mapGetters } from 'vuex';
 import { MailIcon } from 'tdesign-icons-vue';
-import { api_msg_query, api_msg_set_read } from '@/api/msg.js';
+import { api_msg_query, api_msg_set_read, api_msg_all_read } from '@/api/msg.js';
 import { NotificationItem } from '@/interface';
 import PopupEventDetail from '@/pages/notice/components/PopupEventDetail.vue';
 
@@ -85,8 +85,10 @@ export default Vue.extend({
       }
       this.isNoticeVisible = visible;
     },
-    goDetail() {
-      this.$router.push('/notice/msg');
+    async goDetail() {
+      this.$router.push('/msg/index');
+      await api_msg_all_read();
+      await this.loadUnreadMsg();
     },
     checkDetail(item) {
       if (item.payload) {

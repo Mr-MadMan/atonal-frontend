@@ -34,13 +34,27 @@ export default [
     path: '/notice',
     name: 'notice',
     component: Layout,
-    redirect: '/notice/msg',
-    meta: { title: '事件管理', icon: 'calendar-event', single: true },
+    redirect: '/notice/events',
+    meta: { title: '事件管理', icon: 'system-log', single: true },
     children: [
       {
-        path: 'msg',
-        name: 'noticeMsg',
-        component: () => import('@/pages/notice/msg.vue'),
+        path: 'events',
+        name: 'noticeEvents',
+        component: () => import('@/pages/notice/events.vue'),
+      },
+    ],
+  },
+  {
+    path: '/msg',
+    name: 'msg',
+    component: Layout,
+    redirect: '/msg/index',
+    meta: { title: '消息管理', icon: 'chat-message', single: true },
+    children: [
+      {
+        path: 'index',
+        name: 'msgList',
+        component: () => import('@/pages/notice/index.vue'),
       },
     ],
   },
