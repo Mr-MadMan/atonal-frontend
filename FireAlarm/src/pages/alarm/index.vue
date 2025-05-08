@@ -170,6 +170,9 @@ export default {
     async handleDelete(row) {
       try {
         await api_video_delete(row.id);
+        this.currentVideoId = '';
+        this.currentVideo.hls = '';
+        this.currentVideo.flv = '';
         this.$message.success('删除成功');
         this.fetchVideoList();
       } catch (error) {
