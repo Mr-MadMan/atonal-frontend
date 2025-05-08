@@ -19,8 +19,12 @@
       <p>视频截取</p>
       <video v-if="eventDetail.result_video_path" :src="eventDetail.result_video_path" controls></video>
       <p>视频检验描述</p>
-      <t-textarea v-model="eventDetail.status_description" placeholder="请输入视频检验描述" />
-      <div style="text-align: right; margin-top: 10px">
+      <t-textarea
+        v-model="eventDetail.status_description"
+        :readonly="eventDetail.result_status !== 0"
+        placeholder="请输入视频检验描述"
+      />
+      <div style="text-align: right; margin-top: 10px" v-if="eventDetail.result_status === 0">
         <t-button theme="primary" @click="handleModifyEvent(1)">通过</t-button>
         <t-button theme="danger" @click="handleModifyEvent(-1)" style="margin-left: 10px">驳回</t-button>
       </div>
