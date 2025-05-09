@@ -3,13 +3,13 @@ export default {
     // 开发环境接口请求
     API: 'http://public-project.api.atonal.cn:12010',
     // 开发环境 cdn 路径
-    CDN: ''
+    CDN: '',
   },
 
   release: {
     // 正式环境接口地址
-    API: '',
+    API: 'http://localhost:12010',
     // 正式环境 cdn 路径
-    CDN: ''
-  }
-}
+    CDN: '',
+  },
+};

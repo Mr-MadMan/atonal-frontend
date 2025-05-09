@@ -38,7 +38,7 @@ import dayjs from 'dayjs';
 import proxy from '@/config/host';
 
 const env = import.meta.env.MODE || 'development';
-const API_HOST = env === 'mock' ? '/' : proxy[env].API;
+const host = proxy[env].API;
 
 export default {
   name: 'PopupEventDetail',
@@ -50,6 +50,7 @@ export default {
         video_stream: {
           name: '',
         },
+        result_video_path: '',
         result_frame_path: '',
         result_label: '',
         result_status: '',
@@ -70,8 +71,10 @@ export default {
     async fetchEventDetail() {
       const res = await api_event_detail(this.eventId);
       this.eventDetail = res.data;
-      this.eventDetail.result_frame_path = `${API_HOST}/web${res.data.result_frame_path}`;
-      this.eventDetail.result_video_path = `${API_HOST}/web${res.data.result_video_path}`;
+      this.eventDetail.result_frame_path = `${host}/web${res.data.result_frame_path}`;
+      if (res.data.result_video_path) {
+        this.eventDetail.result_video_path = `${host}/web${res.data.result_video_path}`;
+      }
       console.log('eventDetail', this.eventDetail);
     },
     handleModifyEvent(status) {
